@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Valentina Guerrero Portfolio</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+
+:root{
+--rose-main:#C38E8E;
+--rose-soft:#D7A4A4;
+--cream:#F3F1EF;
+--text:#2E2E2E;
+--yellow:#F3D86C;
+--pink:#F1A1C8;
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:Inter;
+background:var(--cream);
+color:var(--text);
+overflow-x:hidden;
+}
+
+h1,h2{
+font-family:'Playfair Display',serif;
+}
+
+/* HERO */
+
+.hero{
+height:100vh;
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:80px;
+position:relative;
+}
+
+.hero-title{
+font-size:160px;
+color:var(--rose-main);
+line-height:0.9;
+animation:fadeUp 1.5s ease;
+}
+
+.hero-sub{
+font-size:28px;
+letter-spacing:4px;
+margin-top:10px;
+}
+
+.hero img{
+width:420px;
+animation:float 6s ease-in-out infinite;
+}
+
+/* ABOUT */
+
+.about{
+display:flex;
+gap:80px;
+align-items:center;
+padding:140px 12%;
+}
+
+.about img{
+width:420px;
+border-radius:300px 300px 0 0;
+}
+
+.about h2{
+font-size:70px;
+color:var(--rose-main);
+margin-bottom:20px;
+}
+
+.about p{
+font-size:20px;
+line-height:1.8;
+max-width:600px;
+}
+
+/* SOCIAL */
+
+.social{
+padding:120px 10%;
+text-align:center;
+background:linear-gradient(90deg,var(--yellow),var(--pink));
+}
+
+.social h2{
+font-size:80px;
+margin-bottom:60px;
+}
+
+.phone-grid{
+display:flex;
+gap:60px;
+justify-content:center;
+}
+
+.phone{
+width:260px;
+border-radius:40px;
+overflow:hidden;
+box-shadow:0 20px 40px rgba(0,0,0,0.2);
+transition:0.5s;
+}
+
+.phone:hover{
+transform:translateY(-15px) scale(1.05);
+}
+
+/* STUDIO */
+
+.studio{
+padding:140px 10%;
+text-align:center;
+}
+
+.studio h2{
+font-size:80px;
+color:var(--rose-main);
+margin-bottom:80px;
+}
+
+.gallery{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:40px;
+}
+
+.gallery img{
+width:100%;
+transition:0.5s;
+}
+
+.gallery img:hover{
+transform:scale(1.07);
+}
+
+/* ANIMATIONS */
+
+@keyframes fadeUp{
+0%{opacity:0;transform:translateY(40px)}
+100%{opacity:1;transform:translateY(0)}
+}
+
+@keyframes float{
+0%{transform:translateY(0)}
+50%{transform:translateY(-20px)}
+100%{transform:translateY(0)}
+}
+
+/* RESPONSIVE */
+
+@media(max-width:900px){
+
+.hero{
+flex-direction:column;
+text-align:center;
+}
+
+.hero-title{
+font-size:90px;
+}
+
+.about{
+flex-direction:column;
+}
+
+.gallery{
+grid-template-columns:1fr;
+}
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+<section class="hero">
+
+<div>
+
+<div style="letter-spacing:8px;font-size:22px">
+VALENTINA GUERRERO
+</div>
+
+<h1 class="hero-title">
+PORTAFOLIO
+</h1>
+
+<div class="hero-sub">
+PHOTOGRAPHY PORTFOLIO
+</div>
+
+</div>
+
+<img src="valentina.png">
+
+</section>
+
+
+<section class="about">
+
+<img src="portrait.jpg">
+
+<div>
+
+<h2>Hi, I'm Valentina</h2>
+
+<p>
+
+If you think I'm crazy, you're probably right.
+
+I'm driven by creativity and drawn to what feels different.
+Photography became my safe space — where rules are optional
+and experimentation is essential.
+
+</p>
+
+</div>
+
+</section>
+
+
+<section class="social">
+
+<h2>SOCIAL MEDIA</h2>
+
+<div class="phone-grid">
+
+<img class="phone" src="phone1.jpg">
+<img class="phone" src="phone2.jpg">
+<img class="phone" src="phone3.jpg">
+
+</div>
+
+</section>
+
+
+<section class="studio">
+
+<h2>STUDIO SESSIONS</h2>
+
+<div class="gallery">
+
+<img src="studio1.jpg">
+<img src="studio2.jpg">
+<img src="studio3.jpg">
+
+</div>
+
+</section>
+
+
+</body>
+</html>
