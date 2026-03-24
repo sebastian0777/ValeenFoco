@@ -1,0 +1,919 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valentina Guerrero Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+:root{
+--rose-main:#C38E8E;
+--rose-soft:#D7A4A4;
+--cream:#F3F1EF;
+--text:#2E2E2E;
+--yellow:#F3D86C;
+--pink:#F1A1C8;
+--menu-bg:rgba(243,241,239,0.94);
+--nav-height:84px;
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+html{
+scroll-behavior:smooth;
+}
+
+body{
+font-family:Inter, sans-serif;
+background:var(--cream);
+color:var(--text);
+overflow-x:hidden;
+padding-top:var(--nav-height);
+line-height:1.4;
+}
+
+h1,h2{
+font-family:'Playfair Display',serif;
+}
+
+img,
+video{
+max-width:100%;
+display:block;
+}
+
+/* MENU */
+.navbar{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:84px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:0 8%;
+background:var(--menu-bg);
+backdrop-filter:blur(6px);
+border-bottom:1px solid rgba(46,46,46,0.08);
+z-index:1000;
+}
+
+.brand{
+font-size:15px;
+letter-spacing:2px;
+font-weight:500;
+}
+
+.nav-links{
+display:flex;
+gap:26px;
+list-style:none;
+}
+
+.nav-toggle{
+display:none;
+border:1px solid rgba(46,46,46,0.2);
+background:transparent;
+color:var(--text);
+border-radius:10px;
+width:42px;
+height:42px;
+font-size:22px;
+line-height:1;
+cursor:pointer;
+}
+
+.nav-links a{
+text-decoration:none;
+color:var(--text);
+font-size:14px;
+font-weight:500;
+letter-spacing:1px;
+transition:0.25s;
+}
+
+.nav-links a:hover{
+color:var(--rose-main);
+}
+
+/* HERO */
+.hero{
+min-height:calc(100vh - 84px);
+display:flex;
+align-items:center;
+justify-content:center;
+padding:40px 8%;
+position:relative;
+}
+
+.hero-content{
+display:flex;
+align-items:center;
+justify-content:center;
+gap:48px;
+flex-wrap:wrap;
+}
+
+.hero-copy{
+max-width:700px;
+}
+
+.hero-name{
+letter-spacing:8px;
+font-size:22px;
+}
+
+.hero-title{
+font-size:clamp(58px, 12vw, 160px);
+color:var(--rose-main);
+line-height:0.9;
+animation:fadeUp 1.5s ease;
+}
+
+.hero-sub{
+font-size:clamp(16px, 2.2vw, 28px);
+letter-spacing:4px;
+margin-top:10px;
+}
+
+.hero img{
+width:360px;
+max-width:85vw;
+margin-top:355px;
+animation:float 6s ease-in-out infinite;
+}
+
+/* ABOUT */
+.about{
+display:flex;
+gap:80px;
+align-items:center;
+padding:140px 12%;
+scroll-margin-top:100px;
+}
+
+.about img{
+width:420px;
+max-width:90vw;
+border-radius:300px 300px 0 0;
+}
+
+.about h2{
+font-size:clamp(38px, 6vw, 70px);
+color:var(--rose-main);
+margin-bottom:20px;
+}
+
+.about p{
+font-size:clamp(16px, 2vw, 20px);
+line-height:1.8;
+max-width:600px;
+}
+
+/* SOCIAL */
+.social{
+padding:120px 10%;
+text-align:center;
+background:linear-gradient(90deg,var(--yellow),var(--pink));
+scroll-margin-top:100px;
+}
+
+.social h2{
+font-size:clamp(42px, 8vw, 80px);
+margin-bottom:60px;
+}
+
+.social-wrap{
+display:flex;
+justify-content:center;
+}
+
+.tiktok-phone{
+width:310px;
+height:620px;
+aspect-ratio:9 / 21;
+background:#111;
+border:10px solid #1f1f1f;
+border-radius:42px;
+position:relative;
+overflow:hidden;
+box-shadow:0 25px 50px rgba(0,0,0,0.35);
+}
+
+.tiktok-phone::before{
+content:"";
+position:absolute;
+inset:7px;
+border:1px solid rgba(255,255,255,0.12);
+border-radius:34px;
+pointer-events:none;
+z-index:4;
+}
+
+.tiktok-phone::after{
+content:"";
+position:absolute;
+left:-3px;
+top:140px;
+width:3px;
+height:52px;
+background:#2b2b2b;
+border-radius:3px 0 0 3px;
+box-shadow:0 70px 0 #2b2b2b;
+pointer-events:none;
+z-index:4;
+}
+
+.phone-notch{
+position:absolute;
+top:10px;
+left:50%;
+transform:translateX(-50%);
+width:44%;
+height:22px;
+background:#0a0a0a;
+border-radius:0 0 16px 16px;
+z-index:5;
+}
+
+.tiktok-track{
+height:100%;
+display:flex;
+flex-direction:column;
+touch-action:pan-y;
+transition:transform 0.45s ease;
+}
+
+.clip{
+position:relative;
+min-height:100%;
+}
+
+.clip video{
+width:100%;
+height:100%;
+object-fit:cover;
+background:#000;
+}
+
+.clip::after{
+content:"";
+position:absolute;
+inset:0;
+background:linear-gradient(to top, rgba(0,0,0,0.65) 10%, rgba(0,0,0,0.18) 55%, rgba(0,0,0,0.06) 100%);
+pointer-events:none;
+}
+
+.clip-meta{
+position:absolute;
+left:16px;
+bottom:18px;
+color:#fff;
+text-align:left;
+z-index:2;
+max-width:75%;
+}
+
+.clip-user{
+font-size:14px;
+font-weight:600;
+margin-bottom:6px;
+}
+
+.clip-caption{
+font-size:12px;
+line-height:1.5;
+opacity:0.9;
+}
+
+.phone-actions{
+position:absolute;
+right:10px;
+bottom:88px;
+display:flex;
+flex-direction:column;
+gap:10px;
+z-index:2;
+}
+
+.action{
+width:40px;
+height:40px;
+border-radius:50%;
+border:1px solid rgba(255,255,255,0.45);
+background:rgba(0,0,0,0.35);
+color:#fff;
+font-size:18px;
+display:grid;
+place-items:center;
+}
+
+.phone-hint{
+position:absolute;
+top:34px;
+left:50%;
+transform:translateX(-50%);
+background:rgba(0,0,0,0.45);
+color:#fff;
+font-size:11px;
+padding:4px 10px;
+border-radius:999px;
+z-index:3;
+}
+
+/* STUDIO */
+.studio{
+padding:140px 10%;
+text-align:center;
+scroll-margin-top:100px;
+}
+
+.studio h2{
+font-size:clamp(42px, 8vw, 80px);
+color:var(--rose-main);
+margin-bottom:80px;
+}
+
+.gallery{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:40px;
+}
+
+.gallery img{
+width:100%;
+transition:0.5s;
+}
+
+.gallery img:hover{
+transform:scale(1.07);
+}
+
+/* ANIMATIONS */
+@keyframes fadeUp{
+0%{opacity:0;transform:translateY(40px)}
+100%{opacity:1;transform:translateY(0)}
+}
+
+@keyframes float{
+0%{transform:translateY(0)}
+50%{transform:translateY(-20px)}
+100%{transform:translateY(0)}
+}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+body{
+padding-top:92px;
+}
+
+.navbar{
+height:auto;
+padding:12px 5%;
+justify-content:space-between;
+}
+
+.nav-links{
+display:none;
+position:absolute;
+top:74px;
+left:5%;
+right:5%;
+padding:14px;
+background:var(--menu-bg);
+border:1px solid rgba(46,46,46,0.12);
+border-radius:16px;
+box-shadow:0 12px 26px rgba(0,0,0,0.08);
+flex-direction:column;
+gap:12px;
+}
+
+.navbar.open .nav-links{
+display:flex;
+}
+
+.nav-toggle{
+display:grid;
+place-items:center;
+}
+
+.nav-links a{
+padding:8px 6px;
+font-size:14px;
+}
+
+.hero{
+min-height:auto;
+padding:56px 5% 40px;
+text-align:center;
+}
+
+.hero-content{
+gap:24px;
+}
+
+.hero-title{
+font-size:90px;
+}
+
+.hero-sub{
+font-size:20px;
+letter-spacing:2px;
+}
+
+.hero img{
+margin-top:10px;
+width:300px;
+}
+
+.about{
+flex-direction:column;
+gap:32px;
+padding:90px 7%;
+}
+
+.about h2{
+font-size:48px;
+}
+
+.about p{
+font-size:18px;
+line-height:1.7;
+}
+
+.social{
+padding:90px 7%;
+}
+
+.social h2,
+.studio h2{
+font-size:52px;
+}
+
+.studio{
+padding:90px 7%;
+}
+
+.gallery{
+grid-template-columns:1fr;
+gap:20px;
+}
+
+.tiktok-phone{
+width:min(312px,70vw);
+height:auto;
+max-height:82vh;
+border-width:9px;
+border-radius:40px;
+}
+}
+
+@media(max-width:600px){
+body{
+padding-top:104px;
+}
+
+.brand{
+font-size:12px;
+letter-spacing:1.4px;
+}
+
+.nav-links{
+left:4%;
+right:4%;
+}
+
+.nav-links a{
+font-size:12px;
+}
+
+.hero-name{
+font-size:15px;
+letter-spacing:3px;
+}
+
+.hero-title{
+font-size:58px;
+line-height:1;
+}
+
+.hero-sub{
+font-size:14px;
+letter-spacing:1.4px;
+}
+
+.hero img{
+width:220px;
+margin-top:0;
+}
+
+.about h2{
+font-size:36px;
+}
+
+.about p{
+font-size:16px;
+}
+
+.social h2,
+.studio h2{
+font-size:38px;
+}
+
+.tiktok-phone{
+width:min(290px,74vw);
+height:auto;
+max-height:82vh;
+border-width:9px;
+border-radius:40px;
+}
+
+.tiktok-phone::before{
+inset:6px;
+border-radius:31px;
+}
+
+.tiktok-phone::after{
+top:124px;
+height:44px;
+box-shadow:0 62px 0 #2b2b2b;
+}
+
+.phone-notch{
+top:8px;
+width:50%;
+height:21px;
+border-radius:0 0 15px 15px;
+}
+
+.phone-actions{
+right:8px;
+bottom:78px;
+gap:8px;
+}
+
+.action{
+width:36px;
+height:36px;
+font-size:16px;
+}
+
+.clip-meta{
+left:12px;
+bottom:12px;
+max-width:72%;
+}
+
+.clip-user{
+font-size:13px;
+}
+
+.clip-caption{
+font-size:11px;
+line-height:1.45;
+}
+}
+
+@media(max-width:420px){
+.nav-links a{
+font-size:11px;
+letter-spacing:0.4px;
+}
+
+.hero{
+padding-top:44px;
+}
+
+.hero img{
+width:200px;
+}
+
+.tiktok-phone{
+width:min(270px,78vw);
+max-height:80vh;
+border-width:8px;
+border-radius:36px;
+}
+
+.tiktok-phone::before{
+inset:5px;
+border-radius:28px;
+}
+
+.tiktok-phone::after{
+top:118px;
+height:40px;
+box-shadow:0 56px 0 #2b2b2b;
+}
+
+.phone-hint{
+font-size:10px;
+padding:4px 8px;
+}
+
+.phone-actions{
+right:6px;
+bottom:70px;
+}
+}
+</style>
+</head>
+
+<body>
+<nav class="navbar">
+<div class="brand">VALENTINA GUERRERO</div>
+<button class="nav-toggle" id="navToggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="mainMenu">☰</button>
+<ul class="nav-links" id="mainMenu">
+<li><a href="#inicio">Inicio</a></li>
+<li><a href="#about">Sobre mi</a></li>
+<li><a href="#social">Social</a></li>
+<li><a href="#studio">Studio</a></li>
+</ul>
+</nav>
+
+<section class="hero" id="inicio">
+<div class="hero-content">
+<div class="hero-copy">
+<div class="hero-name">VALENTINA GUERRERO</div>
+<h1 class="hero-title">PORTAFOLIO</h1>
+<div class="hero-sub">PHOTOGRAPHY PORTFOLIO</div>
+</div>
+<img src="Captura_de_pantalla_2026-03-15_191113-removebg-preview.png" alt="Valentina Guerrero">
+</div>
+</section>
+
+<section class="about" id="about">
+<img src="Captura de pantalla 2026-03-16 100407.png"alt="Portrait de Valentina">
+<div>
+<h2>Hi, I'm Valentina</h2>
+<p>
+If you think I'm crazy, you're probably right.
+I'm driven by creativity and drawn to what feels different.
+Photography became my safe space - where rules are optional
+and experimentation is essential.
+</p>
+</div>
+</section>
+
+<section class="social" id="social">
+<h2>SOCIAL MEDIA</h2>
+<div class="social-wrap">
+<div class="tiktok-phone" id="tiktokPhone">
+<div class="phone-notch"></div>
+<div class="phone-hint">Desliza para cambiar</div>
+
+<div class="tiktok-track" id="tiktokTrack">
+<article class="clip">
+<video playsinline webkit-playsinline autoplay muted loop preload="auto" poster="Captura de pantalla 2026-03-16 100407.png">
+<source src="Videos/84ea8a58306248ce93eda1eb9a7de321.mp4" type="video/mp4">
+</video>
+<div class="clip-meta">
+<div class="clip-user">@valentina.guerrero</div>
+<div class="clip-caption">Editorial vibes and studio lights.</div>
+</div>
+</article>
+
+<article class="clip">
+<video playsinline webkit-playsinline autoplay muted loop preload="auto" poster="Captura de pantalla 2026-03-16 100407.png">
+<source src="Videos/c43b47960511413a9529a02f623fbd55.mp4" type="video/mp4">
+</video>
+<div class="clip-meta">
+<div class="clip-user">@valentina.guerrero</div>
+<div class="clip-caption">Behind the scenes in motion.</div>
+</div>
+</article>
+
+<article class="clip">
+<video playsinline webkit-playsinline autoplay muted loop preload="auto" poster="Captura de pantalla 2026-03-16 100407.png">
+<source src="Videos/copy_248EB6E0-BEEA-4732-A656-364DC537BD79.mp4" type="video/mp4">
+</video>
+<div class="clip-meta">
+<div class="clip-user">@valentina.guerrero</div>
+<div class="clip-caption">Color, contrast and creative chaos.</div>
+</div>
+</article>
+
+<article class="clip">
+<video playsinline webkit-playsinline autoplay muted loop preload="auto" poster="Captura de pantalla 2026-03-16 100407.png">
+<source src="Videos/copy_344B4DCE-CD02-42C3-ACE9-3D1D57A1C4D0.mp4" type="video/mp4">
+</video>
+<div class="clip-meta">
+<div class="clip-user">@valentina.guerrero</div>
+<div class="clip-caption">Natural light and soft shadows.</div>
+</div>
+</article>
+
+<article class="clip">
+<video playsinline webkit-playsinline autoplay muted loop preload="auto" poster="Captura de pantalla 2026-03-16 100407.png">
+<source src="Videos/copy_44F57315-C11E-40B6-A82B-59F976912391.mp4" type="video/mp4">
+</video>
+<div class="clip-meta">
+<div class="clip-user">@valentina.guerrero</div>
+<div class="clip-caption">Fashion frame with bold movement.</div>
+</div>
+</article>
+
+<article class="clip">
+<video playsinline webkit-playsinline autoplay muted loop preload="auto" poster="Captura de pantalla 2026-03-16 100407.png">
+<source src="Videos/copy_AFAB29FE-2BD7-476C-A93B-832DCE983C75.mp4" type="video/mp4">
+</video>
+<div class="clip-meta">
+<div class="clip-user">@valentina.guerrero</div>
+<div class="clip-caption">Portrait rhythm with cinematic tone.</div>
+</div>
+</article>
+
+<article class="clip">
+<video playsinline webkit-playsinline autoplay muted loop preload="auto" poster="Captura de pantalla 2026-03-16 100407.png">
+<source src="Videos/copy_BD5B7742-AF4D-4BDC-89D3-67395674A914.mp4" type="video/mp4">
+</video>
+<div class="clip-meta">
+<div class="clip-user">@valentina.guerrero</div>
+<div class="clip-caption">Final take from the latest session.</div>
+</div>
+</article>
+</div>
+
+<div class="phone-actions">
+<button class="action" type="button" aria-label="Like">❤</button>
+<button class="action" type="button" aria-label="Comment">💬</button>
+<button class="action" type="button" aria-label="Share">↗</button>
+</div>
+</div>
+</div>
+</section>
+
+<section class="studio" id="studio">
+<h2>STUDIO SESSIONS</h2>
+<div class="gallery">
+<img src="fotos/IMG_2837.JPG" alt="Studio session 1">
+<img src="fotos/IMG_2849.JPG" alt="Studio session 2">
+<img src="fotos/IMG_2869.JPG" alt="Studio session 3">
+<img src="fotos/IMG_7870.jpg" alt="Studio session 4">
+<img src="fotos/IMG_7874.jpg" alt="Studio session 5">
+<img src="fotos/IMG_7883.jpg" alt="Studio session 6">
+<img src="fotos/IMG_7943.JPG" alt="Studio session 7">
+<img src="fotos/IMG_7973.JPG" alt="Studio session 8">
+<img src="fotos/IMG_7978.JPG" alt="Studio session 9">
+</div>
+</section>
+
+<script>
+(() => {
+const navbar = document.querySelector('.navbar');
+const navToggle = document.getElementById('navToggle');
+const menu = document.getElementById('mainMenu');
+if (!navbar || !navToggle || !menu) return;
+
+function closeMenu() {
+navbar.classList.remove('open');
+navToggle.setAttribute('aria-expanded', 'false');
+navToggle.textContent = '☰';
+}
+
+function openMenu() {
+navbar.classList.add('open');
+navToggle.setAttribute('aria-expanded', 'true');
+navToggle.textContent = '✕';
+}
+
+navToggle.addEventListener('click', () => {
+const isOpen = navbar.classList.contains('open');
+if (isOpen) closeMenu();
+else openMenu();
+});
+
+menu.querySelectorAll('a').forEach((link) => {
+link.addEventListener('click', closeMenu);
+});
+
+window.addEventListener('resize', () => {
+if (window.innerWidth > 900) closeMenu();
+});
+})();
+
+(() => {
+const phone = document.getElementById('tiktokPhone');
+const track = document.getElementById('tiktokTrack');
+if (!phone || !track) return;
+
+const clips = Array.from(track.querySelectorAll('.clip'));
+const videos = Array.from(track.querySelectorAll('video'));
+const hint = phone.querySelector('.phone-hint');
+let index = 0;
+let touchStartY = 0;
+let lock = false;
+let isMuted = true;
+let justSwiped = false;
+
+function applyMuteState() {
+videos.forEach((video) => {
+video.muted = isMuted;
+});
+if (hint) {
+hint.textContent = isMuted ? 'Toca para activar sonido' : 'Sonido activado (toca para silenciar)';
+}
+}
+
+function toggleMute() {
+isMuted = !isMuted;
+applyMuteState();
+const activeVideo = videos[index];
+if (!activeVideo) return;
+const playPromise = activeVideo.play();
+if (playPromise && typeof playPromise.catch === 'function') {
+playPromise.catch(() => {});
+}
+}
+
+function updateView() {
+track.style.transform = `translateY(-${index * 100}%)`;
+videos.forEach((video, i) => {
+if (i === index && !document.hidden) {
+video.load();
+const playPromise = video.play();
+if (playPromise && typeof playPromise.catch === 'function') {
+playPromise.catch(() => {});
+}
+} else {
+video.pause();
+video.currentTime = 0;
+}
+});
+}
+
+function goTo(next) {
+if (lock) return;
+if (next < 0 || next >= clips.length) return;
+lock = true;
+index = next;
+updateView();
+setTimeout(() => {
+lock = false;
+}, 420);
+}
+
+function nextClip() {
+goTo(index + 1);
+}
+
+function prevClip() {
+goTo(index - 1);
+}
+
+phone.addEventListener('wheel', (event) => {
+event.preventDefault();
+if (event.deltaY > 15) nextClip();
+if (event.deltaY < -15) prevClip();
+}, { passive: false });
+
+phone.addEventListener('touchstart', (event) => {
+touchStartY = event.touches[0].clientY;
+}, { passive: true });
+
+phone.addEventListener('touchend', (event) => {
+const touchEndY = event.changedTouches[0].clientY;
+const delta = touchStartY - touchEndY;
+if (delta > 40) {
+justSwiped = true;
+nextClip();
+}
+if (delta < -40) {
+justSwiped = true;
+prevClip();
+}
+if (justSwiped) {
+setTimeout(() => {
+justSwiped = false;
+}, 260);
+}
+}, { passive: true });
+
+phone.addEventListener('click', (event) => {
+const isVideoTap = event.target.closest('video');
+if (!isVideoTap || justSwiped) return;
+toggleMute();
+});
+
+window.addEventListener('keydown', (event) => {
+if (!phone.matches(':hover')) return;
+if (event.key === 'ArrowDown') nextClip();
+if (event.key === 'ArrowUp') prevClip();
+});
+
+document.addEventListener('visibilitychange', () => {
+updateView();
+});
+
+applyMuteState();
+updateView();
+})();
+</script>
+</body>
+</html>
