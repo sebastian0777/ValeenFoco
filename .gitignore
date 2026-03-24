@@ -1,0 +1,6 @@
+﻿# Large/local media and tooling
+tools/
+Videos/*.mov
+Videos/*.mp4
+!Videos/web/
+!Videos/web/*.mp4
