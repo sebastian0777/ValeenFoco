@@ -451,22 +451,233 @@ scroll-margin-top:100px;
 .studio h2{
 font-size:clamp(42px, 8vw, 80px);
 color:var(--rose-main);
-margin-bottom:80px;
+margin-bottom:20px;
 }
 
-.gallery{
+.studio-intro{
+max-width:680px;
+margin:0 auto 44px;
+font-size:14px;
+line-height:1.7;
+opacity:0.86;
+}
+
+.archive-categories{
+max-width:1080px;
+margin:0 auto;
 display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:40px;
+grid-template-columns:repeat(3, minmax(0, 1fr));
+gap:20px;
 }
 
-.gallery img{
+.category-tile{
+background:transparent;
+border:0;
+border-radius:0;
+padding:8px 4px;
+text-align:left;
+cursor:pointer;
+transition:transform 0.35s ease;
+}
+
+.category-tile:hover{
+transform:translateY(-4px);
+}
+
+.category-tile.active{
+transform:translateY(-3px);
+}
+
+.category-head{
+display:flex;
+justify-content:space-between;
+align-items:flex-end;
+margin-bottom:14px;
+}
+
+.category-title{
+font-family:'Playfair Display', serif;
+font-size:30px;
+font-weight:600;
+letter-spacing:0.8px;
+color:#694c4c;
+line-height:0.95;
+text-transform:uppercase;
+}
+
+.category-meta{
+display:none;
+}
+
+.stack-preview{
+height:250px;
+position:relative;
+border-radius:14px;
+background:transparent;
+overflow:hidden;
+}
+
+.stack-photo{
+position:absolute;
+left:50%;
+top:50%;
+width:min(190px, 78%);
+aspect-ratio:4 / 5;
+object-fit:cover;
+border-radius:14px;
+border:2px solid rgba(255,255,255,0.85);
+box-shadow:0 12px 20px rgba(0,0,0,0.18);
+transition:transform 0.45s ease;
+}
+
+.stack-photo.cover{
+z-index:1;
+filter:blur(1.2px) brightness(0.85);
+transform:translate(-50%, -50%) scale(1.03);
+}
+
+.stack-photo.mid{
+z-index:2;
+transform:translate(-55%, -52%) rotate(-7deg);
+}
+
+.stack-photo.top{
+z-index:3;
+transform:translate(-45%, -46%) rotate(7deg);
+}
+
+.category-tile.active .stack-photo.mid{
+transform:translate(-64%, -58%) rotate(-14deg) scale(1.03);
+}
+
+.category-tile.active .stack-photo.top{
+transform:translate(-36%, -40%) rotate(14deg) scale(1.03);
+}
+
+.archive-panel{
+max-width:min(96vw, 1480px);
+margin:26px auto 0;
+max-height:0;
+opacity:0;
+overflow:hidden;
+padding:0 24px;
+background:transparent;
+border:0;
+border-radius:0;
+box-shadow:none;
+transform-origin:top center;
+transform:scaleY(0.84) translateY(-28px);
+transition:max-height 0.8s ease, opacity 0.5s ease, padding 0.55s ease, transform 0.65s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.archive-panel.open{
+max-height:5200px;
+opacity:1;
+padding:14px 4px 8px;
+transform:scaleY(1) translateY(0);
+}
+
+.panel-head{
+display:flex;
+align-items:baseline;
+justify-content:flex-start;
+margin-bottom:16px;
+}
+
+.panel-title{
+font-family:'Playfair Display', serif;
+font-size:34px;
+color:#6f5151;
+}
+
+.panel-count{
+display:none;
+}
+
+.panel-reveal{
+display:grid;
+grid-template-rows:0fr;
+transition:grid-template-rows 0.6s ease;
+}
+
+.archive-panel.open .panel-reveal{
+grid-template-rows:1fr;
+}
+
+.panel-grid{
+display:grid;
+grid-template-columns:repeat(3, minmax(0, 1fr));
+gap:18px;
+overflow:hidden;
+}
+
+.panel-grid img{
 width:100%;
-transition:0.5s;
+aspect-ratio:4 / 5.2;
+object-fit:cover;
+border-radius:14px;
+min-height:300px;
+box-shadow:0 14px 24px rgba(0,0,0,0.14);
+transition:transform 0.32s ease, box-shadow 0.32s ease;
+opacity:0;
+animation:panelPhotoIn 0.75s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+animation-delay:var(--d, 0ms);
 }
 
-.gallery img:hover{
-transform:scale(1.07);
+.panel-grid img:hover{
+transform:translateY(-4px) scale(1.02);
+box-shadow:0 20px 32px rgba(0,0,0,0.2);
+}
+
+.lightbox{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.82);
+display:grid;
+place-items:center;
+padding:24px;
+opacity:0;
+pointer-events:none;
+transition:opacity 0.25s ease;
+z-index:1400;
+}
+
+.lightbox.open{
+opacity:1;
+pointer-events:auto;
+}
+
+.lightbox-content{
+position:relative;
+max-width:min(97vw, 1500px);
+max-height:95vh;
+display:grid;
+place-items:center;
+}
+
+.lightbox-img{
+max-width:100%;
+max-height:95vh;
+object-fit:contain;
+border-radius:8px;
+box-shadow:0 20px 40px rgba(0,0,0,0.35);
+}
+
+.lightbox-close{
+position:absolute;
+top:-12px;
+right:-12px;
+width:38px;
+height:38px;
+border-radius:50%;
+border:1px solid rgba(255,255,255,0.6);
+background:rgba(0,0,0,0.56);
+color:#fff;
+font-size:24px;
+line-height:1;
+cursor:pointer;
+display:grid;
+place-items:center;
 }
 
 /* ANIMATIONS */
@@ -494,6 +705,12 @@ transform:scale(1.07);
 0%{transform:translate(var(--x, 0), 0) rotate(var(--r, 0deg))}
 50%{transform:translate(var(--x, 0), -8px) rotate(var(--r, 0deg))}
 100%{transform:translate(var(--x, 0), 0) rotate(var(--r, 0deg))}
+}
+
+@keyframes panelPhotoIn{
+0%{opacity:0;transform:translateY(64px) scale(0.72) rotate(-6deg)}
+60%{opacity:1;transform:translateY(-8px) scale(1.03) rotate(1.6deg)}
+100%{opacity:1;transform:translateY(0) scale(1) rotate(0)}
 }
 
 /* RESPONSIVE */
@@ -598,9 +815,29 @@ font-size:52px;
 padding:90px 7%;
 }
 
-.gallery{
+.archive-categories{
 grid-template-columns:1fr;
-gap:20px;
+gap:16px;
+}
+
+.category-title{
+font-size:30px;
+}
+
+.archive-panel.open{
+max-height:3200px;
+}
+
+.panel-title{
+font-size:30px;
+}
+
+.panel-grid{
+grid-template-columns:repeat(2, minmax(0, 1fr));
+}
+
+.panel-grid img{
+min-height:340px;
 }
 
 .tiktok-phone{
@@ -662,6 +899,48 @@ font-size:16px;
 .social h2,
 .studio h2{
 font-size:38px;
+}
+
+.studio-intro{
+font-size:13px;
+margin-bottom:30px;
+}
+
+.category-title{
+font-size:24px;
+}
+
+.stack-preview{
+height:210px;
+}
+
+.stack-photo{
+width:min(178px, 76%);
+}
+
+.archive-panel{
+padding:0 12px;
+}
+
+.archive-panel.open{
+padding:10px 0 8px;
+}
+
+.panel-head{
+margin-bottom:12px;
+}
+
+.panel-title{
+font-size:24px;
+}
+
+.panel-grid{
+grid-template-columns:1fr;
+gap:12px;
+}
+
+.panel-grid img{
+min-height:320px;
 }
 
 .tiktok-phone{
@@ -931,17 +1210,60 @@ and experimentation is essential.
 </section>
 
 <section class="studio" id="studio">
-<h2>STUDIO SESSIONS</h2>
-<div class="gallery">
-<img src="fotos/IMG_2837.JPG" alt="Studio session 1">
-<img src="fotos/IMG_2849.JPG" alt="Studio session 2">
-<img src="fotos/IMG_2869.JPG" alt="Studio session 3">
-<img src="fotos/IMG_7870.jpg" alt="Studio session 4">
-<img src="fotos/IMG_7874.jpg" alt="Studio session 5">
-<img src="fotos/IMG_7883.jpg" alt="Studio session 6">
-<img src="fotos/IMG_7973.JPG" alt="Studio session 7">
-<img src="fotos/IMG_7943.JPG" alt="Studio session 8">
-<img src="fotos/IMG_7978.JPG" alt="Studio session 9">
+<h2>PHOTO ARCHIVE</h2>
+<div class="archive-categories">
+<button class="category-tile" type="button" data-title="Eventos" data-photos="fotos/IMG_2837.JPG|fotos/IMG_2869.JPG|fotos/IMG_7973.JPG|fotos/IMG_7870.jpg|fotos/IMG_7943.JPG|fotos/IMG_2849.JPG">
+<div class="category-head">
+<div class="category-title">Eventos</div>
+<div class="category-meta">06 FOTOS</div>
+</div>
+<div class="stack-preview">
+<img class="stack-photo cover" src="fotos/IMG_2837.JPG" alt="Portada eventos">
+<img class="stack-photo mid" src="fotos/IMG_2869.JPG" alt="Eventos preview 1">
+<img class="stack-photo top" src="fotos/IMG_7973.JPG" alt="Eventos preview 2">
+</div>
+</button>
+
+<button class="category-tile" type="button" data-title="Retrato" data-photos="fotos/IMG_2849.JPG|fotos/IMG_7883.jpg|fotos/IMG_7943.JPG|fotos/IMG_7978.JPG|fotos/IMG_7874.jpg|fotos/IMG_2869.JPG">
+<div class="category-head">
+<div class="category-title">Retrato</div>
+<div class="category-meta">06 FOTOS</div>
+</div>
+<div class="stack-preview">
+<img class="stack-photo cover" src="fotos/IMG_2849.JPG" alt="Portada retrato">
+<img class="stack-photo mid" src="fotos/IMG_7883.jpg" alt="Retrato preview 1">
+<img class="stack-photo top" src="fotos/IMG_7943.JPG" alt="Retrato preview 2">
+</div>
+</button>
+
+<button class="category-tile" type="button" data-title="Producto" data-photos="fotos/IMG_7870.jpg|fotos/IMG_7874.jpg|fotos/IMG_7978.JPG|fotos/IMG_2837.JPG|fotos/IMG_7883.jpg|fotos/IMG_7973.JPG">
+<div class="category-head">
+<div class="category-title">Producto</div>
+<div class="category-meta">06 FOTOS</div>
+</div>
+<div class="stack-preview">
+<img class="stack-photo cover" src="fotos/IMG_7870.jpg" alt="Portada producto">
+<img class="stack-photo mid" src="fotos/IMG_7874.jpg" alt="Producto preview 1">
+<img class="stack-photo top" src="fotos/IMG_7978.JPG" alt="Producto preview 2">
+</div>
+</button>
+</div>
+
+<div class="archive-panel" id="archivePanel">
+<div class="panel-head">
+<h3 class="panel-title" id="panelTitle"></h3>
+<span class="panel-count" id="panelCount"></span>
+</div>
+<div class="panel-reveal">
+<div class="panel-grid" id="panelGrid"></div>
+</div>
+</div>
+
+<div class="lightbox" id="lightbox" aria-hidden="true">
+<div class="lightbox-content">
+<button class="lightbox-close" id="lightboxClose" type="button" aria-label="Cerrar imagen">×</button>
+<img class="lightbox-img" id="lightboxImg" src="" alt="Foto ampliada">
+</div>
 </div>
 </section>
 
@@ -976,6 +1298,77 @@ link.addEventListener('click', closeMenu);
 
 window.addEventListener('resize', () => {
 if (window.innerWidth > 900) closeMenu();
+});
+})();
+
+(() => {
+const categoryTiles = Array.from(document.querySelectorAll('.category-tile'));
+const panel = document.getElementById('archivePanel');
+const panelTitle = document.getElementById('panelTitle');
+const panelCount = document.getElementById('panelCount');
+const panelGrid = document.getElementById('panelGrid');
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = document.getElementById('lightboxImg');
+const lightboxClose = document.getElementById('lightboxClose');
+if (!categoryTiles.length || !panel || !panelTitle || !panelCount || !panelGrid || !lightbox || !lightboxImg || !lightboxClose) return;
+
+function getPhotos(tile) {
+const raw = tile.dataset.photos || '';
+return raw.split('|').map((item) => item.trim()).filter(Boolean);
+}
+
+function renderPanel(tile) {
+const title = tile.dataset.title || 'Categoria';
+const photos = getPhotos(tile);
+panelTitle.textContent = title;
+panelCount.textContent = `${String(photos.length).padStart(2, '0')} FOTOS`;
+panelGrid.innerHTML = photos.map((src, idx) => `<img src="${src}" alt="${title} ${idx + 1}" style="--d:${idx * 70}ms;">`).join('');
+}
+
+function closeLightbox() {
+lightbox.classList.remove('open');
+lightbox.setAttribute('aria-hidden', 'true');
+lightboxImg.src = '';
+}
+
+panelGrid.addEventListener('click', (event) => {
+const img = event.target.closest('img');
+if (!img) return;
+lightboxImg.src = img.src;
+lightboxImg.alt = img.alt || 'Foto ampliada';
+lightbox.classList.add('open');
+lightbox.setAttribute('aria-hidden', 'false');
+});
+
+lightboxClose.addEventListener('click', closeLightbox);
+
+lightbox.addEventListener('click', (event) => {
+if (event.target === lightbox) closeLightbox();
+});
+
+window.addEventListener('keydown', (event) => {
+if (event.key === 'Escape') closeLightbox();
+});
+
+categoryTiles.forEach((tile) => {
+tile.addEventListener('click', () => {
+const isActive = tile.classList.contains('active');
+if (isActive && panel.classList.contains('open')) {
+panel.classList.remove('open');
+tile.classList.remove('active');
+return;
+}
+
+categoryTiles.forEach((item) => item.classList.remove('active'));
+tile.classList.add('active');
+
+panel.classList.remove('open');
+setTimeout(() => {
+renderPanel(tile);
+panel.classList.add('open');
+panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}, 180);
+});
 });
 })();
 
