@@ -209,24 +209,30 @@ color:var(--rose-main);
 
 /* HERO */
 .hero{
-min-height:calc(100vh - 84px);
+min-height:78vh;
 display:flex;
 align-items:flex-start;
 justify-content:center;
-padding:12px 8% 40px;
+padding:12px 2% 10px 6%;
 position:relative;
 }
 
 .hero-content{
-display:flex;
-align-items:center;
-justify-content:center;
-gap:48px;
-flex-wrap:wrap;
+display:block;
+position:relative;
+width:100%;
+max-width:1280px;
+margin:0 auto;
+min-height:440px;
 }
 
 .hero-copy{
-max-width:700px;
+max-width:920px;
+width:100%;
+position:relative;
+text-align:center;
+margin:0 auto;
+left:-128px;
 }
 
 .hero-name{
@@ -245,15 +251,20 @@ animation:fadeUp 1.5s ease;
 font-size:clamp(16px, 2.2vw, 28px);
 letter-spacing:4px;
 margin-top:10px;
+text-align:center;
 }
 
 .hero img{
-width:360px;
+width:410px;
 max-width:85vw;
 margin-top:0;
-position:relative;
-top:220px;
+position:absolute;
+top:62px;
+left:84%;
+transform:translateX(-50%);
+z-index:2;
 animation:float 6s ease-in-out infinite;
+pointer-events:none;
 }
 
 /* ABOUT */
@@ -261,7 +272,7 @@ animation:float 6s ease-in-out infinite;
 display:flex;
 gap:80px;
 align-items:center;
-padding:140px 12%;
+padding:24px 12% 96px;
 scroll-margin-top:100px;
 }
 
@@ -581,7 +592,7 @@ gap:20px;
 background:transparent;
 border:0;
 border-radius:0;
-padding:8px 4px;
+padding:8px 4px 20px;
 text-align:left;
 cursor:pointer;
 transition:transform 0.35s ease;
@@ -617,18 +628,18 @@ display:none;
 }
 
 .stack-preview{
-height:250px;
+height:290px;
 position:relative;
 border-radius:14px;
 background:transparent;
-overflow:hidden;
+overflow:visible;
 }
 
 .stack-photo{
 position:absolute;
 left:50%;
 top:50%;
-width:min(190px, 78%);
+width:min(210px, 82%);
 aspect-ratio:4 / 5;
 object-fit:cover;
 border-radius:14px;
@@ -673,8 +684,8 @@ border:0;
 border-radius:0;
 box-shadow:none;
 transform-origin:top center;
-transform:scaleY(0.84) translateY(-28px);
-transition:max-height 0.8s ease, opacity 0.5s ease, padding 0.55s ease, transform 0.65s cubic-bezier(0.2, 0.8, 0.2, 1);
+transform:scaleY(0.9) translateY(-14px);
+transition:max-height 0.45s ease, opacity 0.32s ease, padding 0.32s ease, transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .archive-panel.open{
@@ -704,7 +715,7 @@ display:none;
 .panel-reveal{
 display:grid;
 grid-template-rows:0fr;
-transition:grid-template-rows 0.6s ease;
+transition:grid-template-rows 0.35s ease;
 }
 
 .archive-panel.open .panel-reveal{
@@ -727,7 +738,7 @@ min-height:300px;
 box-shadow:0 14px 24px rgba(0,0,0,0.14);
 transition:transform 0.32s ease, box-shadow 0.32s ease;
 opacity:0;
-animation:panelPhotoIn 0.75s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+animation:panelPhotoIn 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 animation-delay:var(--d, 0ms);
 }
 
@@ -815,8 +826,8 @@ place-items:center;
 }
 
 @keyframes panelPhotoIn{
-0%{opacity:0;transform:translateY(64px) scale(0.72) rotate(-6deg)}
-60%{opacity:1;transform:translateY(-8px) scale(1.03) rotate(1.6deg)}
+0%{opacity:0;transform:translateY(26px) scale(0.9)}
+60%{opacity:1;transform:translateY(-3px) scale(1.01)}
 100%{opacity:1;transform:translateY(0) scale(1) rotate(0)}
 }
 
@@ -899,6 +910,12 @@ text-align:center;
 
 .hero-content{
 gap:24px;
+min-height:auto;
+}
+
+.hero-copy{
+left:0;
+max-width:700px;
 }
 
 .hero-title{
@@ -913,6 +930,12 @@ letter-spacing:2px;
 .hero img{
 margin-top:10px;
 width:300px;
+top:0;
+right:auto;
+left:auto;
+position:relative;
+pointer-events:auto;
+transform:none;
 }
 
 .about{
@@ -1010,6 +1033,11 @@ font-size:15px;
 letter-spacing:3px;
 }
 
+.hero-copy{
+left:0;
+max-width:100%;
+}
+
 .hero-title{
 font-size:58px;
 line-height:1;
@@ -1023,6 +1051,11 @@ letter-spacing:1.4px;
 .hero img{
 width:220px;
 margin-top:0;
+top:0;
+right:auto;
+left:auto;
+position:relative;
+transform:none;
 }
 
 .about h2{
@@ -1209,8 +1242,7 @@ bottom:70px;
 <div class="hero-name">VALENTINA GUERRERO</div>
 <h1 class="hero-title">PORTAFOLIO</h1>
 <div class="hero-sub">PHOTOGRAPHY PORTFOLIO</div>
-</div>
-<img src="Captura_de_pantalla_2026-03-15_191113-removebg-preview.png" alt="Valentina Guerrero">
+<img src="ChatGPT Image 25 mar 2026, 06_29_10 p.m. (1).png" alt="Valentina Guerrero">
 </div>
 </section>
 
@@ -1484,7 +1516,7 @@ const title = tile.dataset.title || 'Categoria';
 const photos = getPhotos(tile);
 panelTitle.textContent = title;
 panelCount.textContent = `${String(photos.length).padStart(2, '0')} FOTOS`;
-panelGrid.innerHTML = photos.map((src, idx) => `<img src="${src}" alt="${title} ${idx + 1}" style="--d:${idx * 70}ms;">`).join('');
+panelGrid.innerHTML = photos.map((src, idx) => `<img src="${src}" alt="${title} ${idx + 1}" style="--d:${idx * 35}ms;">`).join('');
 }
 
 function closeLightbox() {
@@ -1524,12 +1556,11 @@ return;
 categoryTiles.forEach((item) => item.classList.remove('active'));
 tile.classList.add('active');
 
-panel.classList.remove('open');
-setTimeout(() => {
 renderPanel(tile);
+if (!panel.classList.contains('open')) {
 panel.classList.add('open');
+}
 panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
-}, 180);
 });
 });
 })();
