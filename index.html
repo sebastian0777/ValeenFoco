@@ -646,12 +646,13 @@ border-radius:14px;
 border:2px solid rgba(255,255,255,0.85);
 box-shadow:0 12px 20px rgba(0,0,0,0.18);
 transition:transform 0.45s ease;
+image-rendering:auto;
 }
 
 .stack-photo.cover{
 z-index:1;
-filter:blur(1.2px) brightness(0.85);
-transform:translate(-50%, -50%) scale(1.03);
+filter:none;
+transform:translate(-50%, -50%) scale(1);
 }
 
 .stack-photo.mid{
@@ -731,15 +732,16 @@ overflow:hidden;
 
 .panel-grid img{
 width:100%;
-aspect-ratio:4 / 5.2;
+aspect-ratio:4 / 5;
 object-fit:cover;
 border-radius:14px;
-min-height:300px;
+min-height:0;
 box-shadow:0 14px 24px rgba(0,0,0,0.14);
 transition:transform 0.32s ease, box-shadow 0.32s ease;
 opacity:0;
 animation:panelPhotoIn 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 animation-delay:var(--d, 0ms);
+image-rendering:auto;
 }
 
 .panel-grid img:hover{
@@ -767,18 +769,21 @@ pointer-events:auto;
 
 .lightbox-content{
 position:relative;
-max-width:min(97vw, 1500px);
+width:min(97vw, 1500px);
 max-height:95vh;
-display:grid;
-place-items:center;
+display:flex;
+align-items:center;
+justify-content:center;
 }
 
 .lightbox-img{
 max-width:100%;
-max-height:95vh;
+max-height:calc(95vh - 84px);
 object-fit:contain;
 border-radius:8px;
 box-shadow:0 20px 40px rgba(0,0,0,0.35);
+transform-origin:center center;
+transition:transform 0.22s ease;
 }
 
 .lightbox-close{
@@ -796,6 +801,50 @@ line-height:1;
 cursor:pointer;
 display:grid;
 place-items:center;
+}
+
+.zoom-ui{
+position:absolute;
+left:50%;
+bottom:12px;
+transform:translateX(-50%);
+display:flex;
+align-items:center;
+gap:10px;
+padding:8px 12px;
+background:rgba(8,8,8,0.72);
+border:1px solid rgba(255,255,255,0.28);
+border-radius:999px;
+backdrop-filter:blur(4px);
+z-index:3;
+}
+
+.zoom-btn{
+width:28px;
+height:28px;
+border-radius:50%;
+border:1px solid rgba(255,255,255,0.5);
+background:rgba(0,0,0,0.28);
+color:#fff;
+font-size:18px;
+line-height:1;
+display:grid;
+place-items:center;
+cursor:pointer;
+}
+
+.zoom-range{
+width:180px;
+accent-color:#f3f1ef;
+cursor:pointer;
+}
+
+.zoom-value{
+min-width:46px;
+text-align:right;
+font-size:12px;
+letter-spacing:0.5px;
+color:#fff;
 }
 
 /* ANIMATIONS */
@@ -1393,39 +1442,39 @@ and experimentation is essential.
 <section class="studio" id="studio">
 <h2>PHOTO ARCHIVE</h2>
 <div class="archive-categories">
-<button class="category-tile" type="button" data-title="Eventos" data-photos="fotos/IMG_2837.JPG|fotos/IMG_2869.JPG|fotos/IMG_7973.JPG|fotos/IMG_7870.jpg|fotos/IMG_7943.JPG|fotos/IMG_2849.JPG">
+<button class="category-tile" type="button" data-title="Eventos" data-photos="eventos/_MG_0861.jpeg|eventos/_MG_0849.jpeg|eventos/_MG_0833.jpeg|eventos/_MG_0806.jpeg|eventos/_MG_0734.jpeg|eventos/_MG_0666.jpeg|eventos/_MG_0864.jpeg">
 <div class="category-head">
 <div class="category-title">Eventos</div>
 <div class="category-meta">06 FOTOS</div>
 </div>
 <div class="stack-preview">
-<img class="stack-photo cover" src="fotos/IMG_2837.JPG" alt="Portada eventos">
-<img class="stack-photo mid" src="fotos/IMG_2869.JPG" alt="Eventos preview 1">
-<img class="stack-photo top" src="fotos/IMG_7973.JPG" alt="Eventos preview 2">
+<img class="stack-photo cover" src="eventos/_MG_0861.jpeg" alt="Portada eventos">
+<img class="stack-photo mid" src="eventos/_MG_0849.jpeg" alt="Eventos preview 1">
+<img class="stack-photo top" src="eventos/_MG_0833.jpeg" alt="Eventos preview 2">
 </div>
 </button>
 
-<button class="category-tile" type="button" data-title="Retrato" data-photos="fotos/IMG_2849.JPG|fotos/IMG_7883.jpg|fotos/IMG_7943.JPG|fotos/IMG_7978.JPG|fotos/IMG_7874.jpg|fotos/IMG_2869.JPG">
+<button class="category-tile" type="button" data-title="Retrato" data-photos="fotos/_MG_0308.JPG|fotos/_MG_0297.JPG|fotos/_MG_0296.JPG|fotos/_MG_0062.JPG|fotos/_MG_0061.JPG|fotos/_MG_0052.JPG|fotos/IMG_7978.JPG|fotos/IMG_7943.JPG|fotos/IMG_7973.JPG|fotos/IMG_7883.jpg|fotos/IMG_7874.jpg|fotos/IMG_7870.jpg|fotos/IMG_2869.JPG|fotos/IMG_2849.JPG|fotos/IMG_2837.JPG">
 <div class="category-head">
 <div class="category-title">Retrato</div>
 <div class="category-meta">06 FOTOS</div>
 </div>
 <div class="stack-preview">
-<img class="stack-photo cover" src="fotos/IMG_2849.JPG" alt="Portada retrato">
-<img class="stack-photo mid" src="fotos/IMG_7883.jpg" alt="Retrato preview 1">
-<img class="stack-photo top" src="fotos/IMG_7943.JPG" alt="Retrato preview 2">
+<img class="stack-photo cover" src="fotos/_MG_0308.JPG" alt="Portada retrato">
+<img class="stack-photo mid" src="fotos/_MG_0297.JPG" alt="Retrato preview 1">
+<img class="stack-photo top" src="fotos/_MG_0296.JPG" alt="Retrato preview 2">
 </div>
 </button>
 
-<button class="category-tile" type="button" data-title="Producto" data-photos="fotos/IMG_7870.jpg|fotos/IMG_7874.jpg|fotos/IMG_7978.JPG|fotos/IMG_2837.JPG|fotos/IMG_7883.jpg|fotos/IMG_7973.JPG">
+<button class="category-tile" type="button" data-title="Producto" data-photos="productos/web/IMG_0029 copia.jpg|productos/web/IMG_0139 copia.jpg|productos/web/IMG_0110 copia.jpg|productos/web/IMG_0220.jpg|productos/web/IMG_0204.jpg|productos/web/IMG_0189.jpg">
 <div class="category-head">
 <div class="category-title">Producto</div>
 <div class="category-meta">06 FOTOS</div>
 </div>
 <div class="stack-preview">
-<img class="stack-photo cover" src="fotos/IMG_7870.jpg" alt="Portada producto">
-<img class="stack-photo mid" src="fotos/IMG_7874.jpg" alt="Producto preview 1">
-<img class="stack-photo top" src="fotos/IMG_7978.JPG" alt="Producto preview 2">
+<img class="stack-photo cover" src="productos/web/IMG_0029 copia.jpg" alt="Portada producto">
+<img class="stack-photo mid" src="productos/web/IMG_0139 copia.jpg" alt="Producto preview 1">
+<img class="stack-photo top" src="productos/web/IMG_0110 copia.jpg" alt="Producto preview 2">
 </div>
 </button>
 </div>
@@ -1444,6 +1493,12 @@ and experimentation is essential.
 <div class="lightbox-content">
 <button class="lightbox-close" id="lightboxClose" type="button" aria-label="Cerrar imagen">×</button>
 <img class="lightbox-img" id="lightboxImg" src="" alt="Foto ampliada">
+<div class="zoom-ui">
+<button class="zoom-btn" id="zoomOut" type="button" aria-label="Alejar">−</button>
+<input class="zoom-range" id="zoomRange" type="range" min="100" max="240" step="5" value="100" aria-label="Zoom de imagen">
+<button class="zoom-btn" id="zoomIn" type="button" aria-label="Acercar">+</button>
+<span class="zoom-value" id="zoomValue">100%</span>
+</div>
 </div>
 </div>
 </section>
@@ -1504,7 +1559,20 @@ const panelGrid = document.getElementById('panelGrid');
 const lightbox = document.getElementById('lightbox');
 const lightboxImg = document.getElementById('lightboxImg');
 const lightboxClose = document.getElementById('lightboxClose');
-if (!categoryTiles.length || !panel || !panelTitle || !panelCount || !panelGrid || !lightbox || !lightboxImg || !lightboxClose) return;
+const zoomRange = document.getElementById('zoomRange');
+const zoomOut = document.getElementById('zoomOut');
+const zoomIn = document.getElementById('zoomIn');
+const zoomValue = document.getElementById('zoomValue');
+if (!categoryTiles.length || !panel || !panelTitle || !panelCount || !panelGrid || !lightbox || !lightboxImg || !lightboxClose || !zoomRange || !zoomOut || !zoomIn || !zoomValue) return;
+
+let currentZoom = 100;
+
+function applyZoom(value) {
+currentZoom = Math.min(240, Math.max(100, value));
+zoomRange.value = String(currentZoom);
+zoomValue.textContent = `${currentZoom}%`;
+lightboxImg.style.transform = `scale(${currentZoom / 100})`;
+}
 
 function getPhotos(tile) {
 const raw = tile.dataset.photos || '';
@@ -1523,6 +1591,7 @@ function closeLightbox() {
 lightbox.classList.remove('open');
 lightbox.setAttribute('aria-hidden', 'true');
 lightboxImg.src = '';
+applyZoom(100);
 }
 
 panelGrid.addEventListener('click', (event) => {
@@ -1530,6 +1599,7 @@ const img = event.target.closest('img');
 if (!img) return;
 lightboxImg.src = img.src;
 lightboxImg.alt = img.alt || 'Foto ampliada';
+applyZoom(100);
 lightbox.classList.add('open');
 lightbox.setAttribute('aria-hidden', 'false');
 });
@@ -1542,7 +1612,17 @@ if (event.target === lightbox) closeLightbox();
 
 window.addEventListener('keydown', (event) => {
 if (event.key === 'Escape') closeLightbox();
+if (!lightbox.classList.contains('open')) return;
+if (event.key === '+') applyZoom(currentZoom + 10);
+if (event.key === '-') applyZoom(currentZoom - 10);
 });
+
+zoomRange.addEventListener('input', (event) => {
+applyZoom(Number(event.target.value));
+});
+
+zoomIn.addEventListener('click', () => applyZoom(currentZoom + 10));
+zoomOut.addEventListener('click', () => applyZoom(currentZoom - 10));
 
 categoryTiles.forEach((tile) => {
 tile.addEventListener('click', () => {
