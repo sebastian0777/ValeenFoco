@@ -847,6 +847,169 @@ letter-spacing:0.5px;
 color:#fff;
 }
 
+/* FOOTER */
+.site-footer{
+padding:84px 8% 54px;
+background:
+radial-gradient(circle at 10% 10%, rgba(195,142,142,0.16), transparent 48%),
+radial-gradient(circle at 88% 22%, rgba(241,161,200,0.12), transparent 42%),
+linear-gradient(180deg, rgba(243,241,239,0.66) 0%, #efe8e5 100%);
+border-top:1px solid rgba(46,46,46,0.08);
+}
+
+.footer-inner{
+max-width:1120px;
+margin:0 auto;
+text-align:center;
+animation:footerReveal 0.9s ease both;
+}
+
+.footer-title{
+font-size:56px;
+color:var(--rose-main);
+line-height:1;
+margin-bottom:12px;
+animation:footerItemIn 0.7s ease both;
+}
+
+.footer-sub{
+font-size:14px;
+letter-spacing:1.2px;
+text-transform:uppercase;
+margin-bottom:28px;
+opacity:0.82;
+animation:footerItemIn 0.7s ease 0.08s both;
+}
+
+.footer-links{
+display:flex;
+justify-content:center;
+gap:14px;
+flex-wrap:wrap;
+margin-bottom:24px;
+}
+
+.social-link{
+display:inline-flex;
+align-items:center;
+gap:8px;
+padding:10px 16px;
+border-radius:999px;
+text-decoration:none;
+color:var(--text);
+font-size:13px;
+font-weight:600;
+letter-spacing:0.3px;
+background:rgba(255,255,255,0.75);
+border:1px solid rgba(46,46,46,0.12);
+transition:transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease, background 0.28s ease;
+animation:footerItemIn 0.7s ease both;
+}
+
+.footer-links .social-link:nth-child(1){
+animation-delay:0.14s;
+}
+
+.footer-links .social-link:nth-child(2){
+animation-delay:0.2s;
+}
+
+.social-link:hover{
+transform:translateY(-4px) scale(1.02);
+border-color:rgba(195,142,142,0.55);
+box-shadow:0 10px 20px rgba(46,46,46,0.14);
+background:rgba(255,255,255,0.9);
+}
+
+.social-icon{
+width:16px;
+height:16px;
+display:inline-block;
+flex:0 0 16px;
+color:var(--rose-main);
+}
+
+.footer-copy{
+font-size:12px;
+letter-spacing:1px;
+opacity:0.75;
+animation:footerItemIn 0.7s ease 0.2s both;
+}
+
+.footer-signature{
+margin-top:8px;
+font-size:11px;
+letter-spacing:1px;
+color:rgba(46,46,46,0.42);
+animation:footerItemIn 0.7s ease 0.28s both;
+}
+
+.social-shutter-overlay{
+position:fixed;
+inset:0;
+z-index:2100;
+display:none;
+pointer-events:none;
+}
+
+.social-shutter-overlay.active{
+display:block;
+}
+
+.social-shutter-top,
+.social-shutter-bottom{
+position:absolute;
+left:0;
+right:0;
+height:50.5%;
+background:#0f0f0f;
+}
+
+.social-shutter-top{
+top:0;
+transform:translateY(-102%);
+}
+
+.social-shutter-bottom{
+bottom:0;
+transform:translateY(102%);
+}
+
+.social-shutter-overlay.active .social-shutter-top{
+animation:socialShutterTop 2s cubic-bezier(0.7, 0, 0.2, 1) forwards;
+}
+
+.social-shutter-overlay.active .social-shutter-bottom{
+animation:socialShutterBottom 2s cubic-bezier(0.7, 0, 0.2, 1) forwards;
+}
+
+.social-shutter-flash{
+position:absolute;
+inset:0;
+background:rgba(255,255,255,0.65);
+opacity:0;
+}
+
+.social-shutter-overlay.active .social-shutter-flash{
+animation:socialShutterFlash 2s ease forwards;
+}
+
+.social-shutter-text{
+position:absolute;
+left:50%;
+top:50%;
+transform:translate(-50%, -50%);
+font-size:13px;
+letter-spacing:1.2px;
+text-transform:uppercase;
+color:#f6f6f6;
+opacity:0;
+}
+
+.social-shutter-overlay.active .social-shutter-text{
+animation:socialShutterText 2s ease forwards;
+}
+
 /* ANIMATIONS */
 @keyframes fadeUp{
 0%{opacity:0;transform:translateY(40px)}
@@ -878,6 +1041,40 @@ color:#fff;
 0%{opacity:0;transform:translateY(26px) scale(0.9)}
 60%{opacity:1;transform:translateY(-3px) scale(1.01)}
 100%{opacity:1;transform:translateY(0) scale(1) rotate(0)}
+}
+
+@keyframes footerReveal{
+0%{opacity:0}
+100%{opacity:1}
+}
+
+@keyframes footerItemIn{
+0%{opacity:0;transform:translateY(18px)}
+100%{opacity:1;transform:translateY(0)}
+}
+
+@keyframes socialShutterTop{
+0%{transform:translateY(-102%)}
+26%{transform:translateY(0)}
+100%{transform:translateY(0)}
+}
+
+@keyframes socialShutterBottom{
+0%{transform:translateY(102%)}
+26%{transform:translateY(0)}
+100%{transform:translateY(0)}
+}
+
+@keyframes socialShutterFlash{
+0%{opacity:0}
+8%{opacity:0.8}
+14%{opacity:0}
+100%{opacity:0}
+}
+
+@keyframes socialShutterText{
+0%,24%{opacity:0}
+34%,100%{opacity:1}
 }
 
 @keyframes introLogoPop{
@@ -1056,6 +1253,14 @@ max-height:82vh;
 border-width:9px;
 border-radius:40px;
 }
+
+.site-footer{
+padding:72px 7% 44px;
+}
+
+.footer-title{
+font-size:44px;
+}
 }
 
 @media(max-width:600px){
@@ -1214,6 +1419,33 @@ font-size:13px;
 font-size:11px;
 line-height:1.45;
 }
+
+.site-footer{
+padding:64px 6% 40px;
+}
+
+.footer-title{
+font-size:34px;
+}
+
+.footer-sub{
+font-size:12px;
+letter-spacing:1px;
+margin-bottom:22px;
+}
+
+.footer-links{
+gap:10px;
+}
+
+.social-link{
+font-size:12px;
+padding:9px 12px;
+}
+
+.footer-signature{
+font-size:10px;
+}
 }
 
 @media(max-width:420px){
@@ -1256,6 +1488,10 @@ padding:4px 8px;
 .phone-actions{
 right:6px;
 bottom:70px;
+}
+
+.footer-title{
+font-size:30px;
 }
 }
 </style>
@@ -1454,14 +1690,14 @@ and experimentation is essential.
 </div>
 </button>
 
-<button class="category-tile" type="button" data-title="Retrato" data-photos="fotos/_MG_0308.JPG|fotos/_MG_0297.JPG|fotos/_MG_0296.JPG|fotos/_MG_0062.JPG|fotos/_MG_0061.JPG|fotos/_MG_0052.JPG|fotos/IMG_7978.JPG|fotos/IMG_7943.JPG|fotos/IMG_7973.JPG|fotos/IMG_7883.jpg|fotos/IMG_7874.jpg|fotos/IMG_7870.jpg|fotos/IMG_2869.JPG|fotos/IMG_2849.JPG|fotos/IMG_2837.JPG">
+<button class="category-tile" type="button" data-title="Retrato" data-photos="fotos/_MG_0297.JPG|fotos/_MG_0308.JPG|fotos/_MG_0296.JPG|fotos/_MG_0062.JPG|fotos/_MG_0052.JPG|fotos/_MG_0061.JPG|fotos/IMG_7978.JPG|fotos/IMG_7943.JPG|fotos/IMG_7973.JPG|fotos/IMG_7883.jpg|fotos/IMG_7874.jpg|fotos/IMG_7870.jpg|fotos/IMG_2869.JPG|fotos/IMG_2849.JPG|fotos/IMG_2837.JPG">
 <div class="category-head">
 <div class="category-title">Retrato</div>
 <div class="category-meta">06 FOTOS</div>
 </div>
 <div class="stack-preview">
-<img class="stack-photo cover" src="fotos/_MG_0308.JPG" alt="Portada retrato">
-<img class="stack-photo mid" src="fotos/_MG_0297.JPG" alt="Retrato preview 1">
+<img class="stack-photo cover" src="fotos/_MG_0297.JPG" alt="Portada retrato">
+<img class="stack-photo mid" src="fotos/_MG_0308.JPG" alt="Retrato preview 1">
 <img class="stack-photo top" src="fotos/_MG_0296.JPG" alt="Retrato preview 2">
 </div>
 </button>
@@ -1502,6 +1738,38 @@ and experimentation is essential.
 </div>
 </div>
 </section>
+
+<footer class="site-footer" id="contacto">
+<div class="footer-inner">
+<h2 class="footer-title">Conectemos</h2>
+<p class="footer-sub">Sigueme en redes y descubre mas sesiones</p>
+<div class="footer-links">
+<a class="social-link" href="https://www.instagram.com/valeenfoco/" target="_blank" rel="noopener noreferrer">
+<svg class="social-icon" viewBox="0 0 24 24" aria-hidden="true">
+<rect x="3.2" y="3.2" width="17.6" height="17.6" rx="5.2" ry="5.2" fill="none" stroke="currentColor" stroke-width="2"></rect>
+<circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"></circle>
+<circle cx="17.3" cy="6.8" r="1.2" fill="currentColor"></circle>
+</svg>
+Instagram
+</a>
+<a class="social-link" href="https://www.tiktok.com/@valeenfoco" target="_blank" rel="noopener noreferrer">
+<svg class="social-icon" viewBox="0 0 24 24" aria-hidden="true">
+<path d="M14.7 4.1c1.1 1.3 2.3 2 3.8 2.1v3.1c-1.3-.1-2.6-.5-3.8-1.2v6.5c0 3.2-2.5 5.4-5.6 5.4-3.3 0-5.9-2.6-5.9-5.8 0-3.5 2.8-6 6.3-5.8v3.1c-1.8-.2-3.2 1-3.2 2.7 0 1.5 1.1 2.8 2.8 2.8 1.5 0 2.5-1 2.5-2.8V4.1h3.1z" fill="currentColor"></path>
+</svg>
+TikTok
+</a>
+</div>
+<p class="footer-copy">© 2026 Valeenfoco. All rights reserved.</p>
+<p class="footer-signature">WeWeb</p>
+</div>
+</footer>
+
+<div class="social-shutter-overlay" id="socialShutter" aria-hidden="true">
+<div class="social-shutter-top"></div>
+<div class="social-shutter-bottom"></div>
+<div class="social-shutter-flash"></div>
+<div class="social-shutter-text" id="socialShutterText">Abriendo red social...</div>
+</div>
 
 <script>
 (() => {
@@ -1587,6 +1855,15 @@ panelCount.textContent = `${String(photos.length).padStart(2, '0')} FOTOS`;
 panelGrid.innerHTML = photos.map((src, idx) => `<img src="${src}" alt="${title} ${idx + 1}" style="--d:${idx * 35}ms;">`).join('');
 }
 
+function scrollToPanelStart() {
+const y = panel.getBoundingClientRect().top + window.scrollY;
+const mobileOffset = window.innerWidth <= 900 ? 110 : 84;
+window.scrollTo({
+top: Math.max(0, y - mobileOffset),
+behavior: 'smooth'
+});
+}
+
 function closeLightbox() {
 lightbox.classList.remove('open');
 lightbox.setAttribute('aria-hidden', 'true');
@@ -1640,7 +1917,7 @@ renderPanel(tile);
 if (!panel.classList.contains('open')) {
 panel.classList.add('open');
 }
-panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+setTimeout(scrollToPanelStart, 40);
 });
 });
 })();
@@ -1774,6 +2051,32 @@ updateView();
 
 applyMuteState();
 updateView();
+})();
+
+(() => {
+const links = Array.from(document.querySelectorAll('.footer-links .social-link'));
+const overlay = document.getElementById('socialShutter');
+const overlayText = document.getElementById('socialShutterText');
+if (!links.length || !overlay || !overlayText) return;
+
+let navigating = false;
+
+links.forEach((link) => {
+link.addEventListener('click', (event) => {
+event.preventDefault();
+if (navigating) return;
+const url = link.getAttribute('href');
+if (!url) return;
+const label = link.textContent.trim();
+navigating = true;
+overlayText.textContent = `Abriendo ${label}...`;
+overlay.classList.add('active');
+overlay.setAttribute('aria-hidden', 'false');
+setTimeout(() => {
+window.location.href = url;
+}, 2000);
+});
+});
 })();
 </script>
 </body>
