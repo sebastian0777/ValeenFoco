@@ -209,11 +209,11 @@ color:var(--rose-main);
 
 /* HERO */
 .hero{
-min-height:78vh;
+min-height:clamp(420px, 56vh, 620px);
 display:flex;
 align-items:flex-start;
 justify-content:center;
-padding:12px 2% 10px 6%;
+padding:12px 2% 0 6%;
 position:relative;
 }
 
@@ -223,7 +223,7 @@ position:relative;
 width:100%;
 max-width:1280px;
 margin:0 auto;
-min-height:440px;
+min-height:clamp(340px, 42vh, 430px);
 }
 
 .hero-copy{
@@ -879,6 +879,12 @@ text-transform:uppercase;
 margin-bottom:28px;
 opacity:0.82;
 animation:footerItemIn 0.7s ease 0.08s both;
+max-width:680px;
+margin-left:auto;
+margin-right:auto;
+line-height:1.5;
+text-wrap:balance;
+overflow-wrap:anywhere;
 }
 
 .footer-links{
@@ -1150,32 +1156,39 @@ font-size:14px;
 
 .hero{
 min-height:auto;
-padding:56px 5% 40px;
+padding:44px 5% 28px;
 text-align:center;
 }
 
 .hero-content{
-gap:24px;
+gap:18px;
 min-height:auto;
+display:flex;
+flex-direction:column;
+align-items:center;
 }
 
 .hero-copy{
 left:0;
-max-width:700px;
+max-width:min(760px, 100%);
+padding-inline:2vw;
 }
 
 .hero-title{
-font-size:90px;
+font-size:clamp(62px, 15vw, 92px);
+line-height:0.92;
 }
 
 .hero-sub{
-font-size:20px;
-letter-spacing:2px;
+font-size:clamp(15px, 3.4vw, 20px);
+letter-spacing:1.6px;
+width:100%;
+max-width:92vw;
 }
 
 .hero img{
 margin-top:10px;
-width:300px;
+width:min(320px, 74vw);
 top:0;
 right:auto;
 left:auto;
@@ -1231,7 +1244,8 @@ font-size:30px;
 }
 
 .archive-panel.open{
-max-height:3200px;
+max-height:20000px;
+overflow:visible;
 }
 
 .panel-title{
@@ -1240,6 +1254,18 @@ font-size:30px;
 
 .panel-grid{
 grid-template-columns:repeat(2, minmax(0, 1fr));
+overflow:visible;
+}
+
+.panel-reveal{
+display:block;
+max-height:0;
+overflow:hidden;
+transition:max-height 0.45s ease;
+}
+
+.archive-panel.open .panel-reveal{
+max-height:20000px;
 }
 
 .panel-grid img{
@@ -1283,33 +1309,43 @@ font-size:12px;
 }
 
 .hero-name{
-font-size:15px;
-letter-spacing:3px;
+font-size:14px;
+letter-spacing:2px;
+width:100%;
+max-width:92vw;
+overflow-wrap:anywhere;
 }
 
 .hero-copy{
 left:0;
 max-width:100%;
+padding-inline:2.5vw;
 }
 
 .hero-title{
-font-size:58px;
-line-height:1;
+font-size:clamp(34px, 10.8vw, 42px);
+line-height:0.96;
+width:100%;
+max-width:96vw;
+text-wrap:balance;
+overflow-wrap:anywhere;
 }
 
 .hero-sub{
-font-size:14px;
-letter-spacing:1.4px;
+font-size:13px;
+letter-spacing:1.1px;
+max-width:94vw;
 }
 
 .hero img{
-width:220px;
-margin-top:0;
+width:min(250px, 72vw);
+margin-top:2px;
 top:0;
 right:auto;
 left:auto;
 position:relative;
 transform:none;
+display:none;
 }
 
 .about h2{
@@ -1348,6 +1384,8 @@ padding:0 12px;
 
 .archive-panel.open{
 padding:10px 0 8px;
+max-height:20000px;
+overflow:visible;
 }
 
 .panel-head{
@@ -1361,6 +1399,18 @@ font-size:24px;
 .panel-grid{
 grid-template-columns:1fr;
 gap:12px;
+overflow:visible;
+}
+
+.panel-reveal{
+display:block;
+max-height:0;
+overflow:hidden;
+transition:max-height 0.45s ease;
+}
+
+.archive-panel.open .panel-reveal{
+max-height:20000px;
 }
 
 .panel-grid img{
@@ -1430,8 +1480,10 @@ font-size:34px;
 
 .footer-sub{
 font-size:12px;
-letter-spacing:1px;
+letter-spacing:0.58px;
 margin-bottom:22px;
+max-width:92%;
+line-height:1.45;
 }
 
 .footer-links{
@@ -1455,11 +1507,37 @@ letter-spacing:0.4px;
 }
 
 .hero{
-padding-top:44px;
+padding-top:38px;
 }
 
 .hero img{
-width:200px;
+width:min(230px, 74vw);
+}
+
+.hero-title{
+font-size:clamp(32px, 10.4vw, 38px);
+line-height:0.98;
+}
+
+.hero-name{
+font-size:13px;
+letter-spacing:1.4px;
+}
+
+.hero-sub{
+font-size:12px;
+letter-spacing:0.8px;
+}
+
+.footer-sub{
+font-size:11px;
+letter-spacing:0.32px;
+max-width:95%;
+line-height:1.4;
+}
+
+.footer-copy{
+font-size:11px;
 }
 
 .tiktok-phone{
@@ -1528,6 +1606,7 @@ font-size:30px;
 <h1 class="hero-title">PORTAFOLIO</h1>
 <div class="hero-sub">PHOTOGRAPHY PORTFOLIO</div>
 <img src="ChatGPT Image 25 mar 2026, 06_29_10 p.m. (1).png" alt="Valentina Guerrero">
+</div>
 </div>
 </section>
 
