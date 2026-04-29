@@ -776,6 +776,25 @@ align-items:center;
 justify-content:center;
 }
 
+.lightbox-viewport{
+width:100%;
+max-height:calc(95vh - 84px);
+display:flex;
+align-items:center;
+justify-content:center;
+overflow:hidden;
+touch-action:none;
+cursor:default;
+}
+
+.lightbox-viewport.zoomable{
+cursor:grab;
+}
+
+.lightbox-viewport.dragging{
+cursor:grabbing;
+}
+
 .lightbox-img{
 max-width:100%;
 max-height:calc(95vh - 84px);
@@ -784,6 +803,9 @@ border-radius:8px;
 box-shadow:0 20px 40px rgba(0,0,0,0.35);
 transform-origin:center center;
 transition:transform 0.22s ease;
+will-change:transform;
+user-select:none;
+pointer-events:none;
 }
 
 .lightbox-close{
@@ -803,48 +825,86 @@ display:grid;
 place-items:center;
 }
 
-.zoom-ui{
+.lightbox-nav{
 position:absolute;
-left:50%;
-bottom:12px;
-transform:translateX(-50%);
-display:flex;
-align-items:center;
-gap:10px;
-padding:8px 12px;
-background:rgba(8,8,8,0.72);
-border:1px solid rgba(255,255,255,0.28);
-border-radius:999px;
-backdrop-filter:blur(4px);
+top:50%;
+transform:translateY(-50%);
+padding:0;
+border:0;
+background:transparent;
+color:rgba(255,255,255,0.66);
+font-size:32px;
+font-weight:300;
+line-height:1;
+cursor:pointer;
+opacity:0.44;
+transition:opacity 0.2s ease, color 0.2s ease, transform 0.2s ease;
 z-index:3;
 }
 
+.lightbox-nav:hover{
+opacity:0.95;
+color:rgba(255,255,255,0.96);
+}
+
+.lightbox-prev{
+left:14px;
+}
+
+.lightbox-next{
+right:14px;
+}
+
+.lightbox-content.ui-hidden .lightbox-nav{
+opacity:0.12;
+}
+
+.zoom-ui{
+position:absolute;
+right:12px;
+bottom:12px;
+display:flex;
+align-items:center;
+gap:8px;
+padding:6px;
+background:rgba(8,8,8,0.72);
+border:1px solid rgba(255,255,255,0.28);
+border-radius:12px;
+backdrop-filter:blur(4px);
+z-index:3;
+opacity:1;
+transition:opacity 0.22s ease;
+}
+
+.lightbox-content.ui-hidden .zoom-ui,
+.lightbox-content.ui-hidden .lightbox-close{
+opacity:0;
+}
+
 .zoom-btn{
-width:28px;
-height:28px;
-border-radius:50%;
+min-width:30px;
+height:30px;
+padding:0 10px;
+border-radius:9px;
 border:1px solid rgba(255,255,255,0.5);
 background:rgba(0,0,0,0.28);
 color:#fff;
-font-size:18px;
+font-size:16px;
+font-weight:600;
 line-height:1;
 display:grid;
 place-items:center;
 cursor:pointer;
 }
 
-.zoom-range{
-width:180px;
-accent-color:#f3f1ef;
-cursor:pointer;
-}
-
 .zoom-value{
-min-width:46px;
-text-align:right;
-font-size:12px;
-letter-spacing:0.5px;
+min-width:48px;
+text-align:center;
+font-size:10px;
+letter-spacing:0.4px;
 color:#fff;
+font-weight:600;
+text-transform:uppercase;
 }
 
 /* FOOTER */
@@ -948,6 +1008,136 @@ font-size:11px;
 letter-spacing:1px;
 color:rgba(46,46,46,0.42);
 animation:footerItemIn 0.7s ease 0.28s both;
+}
+
+.admin-launch{
+display:none;
+position:fixed;
+right:14px;
+bottom:14px;
+z-index:1200;
+border:1px solid rgba(46,46,46,0.2);
+background:rgba(243,241,239,0.94);
+color:var(--text);
+border-radius:999px;
+padding:8px 12px;
+font-size:12px;
+letter-spacing:0.4px;
+cursor:pointer;
+}
+
+.admin-panel{
+position:fixed;
+inset:0;
+z-index:2200;
+display:none;
+align-items:center;
+justify-content:center;
+background:rgba(0,0,0,0.6);
+padding:18px;
+}
+
+.admin-panel.open{
+display:flex;
+}
+
+.admin-card{
+width:min(96vw, 620px);
+max-height:90vh;
+overflow:auto;
+background:#fff;
+border-radius:16px;
+padding:18px;
+box-shadow:0 20px 48px rgba(0,0,0,0.28);
+}
+
+.admin-head{
+display:flex;
+align-items:center;
+justify-content:space-between;
+margin-bottom:12px;
+}
+
+.admin-title{
+font-family:'Playfair Display', serif;
+font-size:30px;
+color:#7e5c5c;
+}
+
+.admin-close{
+border:1px solid rgba(46,46,46,0.2);
+background:transparent;
+border-radius:10px;
+width:34px;
+height:34px;
+font-size:20px;
+cursor:pointer;
+}
+
+.admin-note{
+font-size:13px;
+opacity:0.72;
+margin-bottom:14px;
+}
+
+.admin-upload{
+display:grid;
+gap:10px;
+}
+
+.admin-upload.locked{
+opacity:0.45;
+pointer-events:none;
+}
+
+.admin-grid{
+display:grid;
+gap:10px;
+}
+
+.admin-grid label{
+font-size:12px;
+letter-spacing:0.5px;
+text-transform:uppercase;
+opacity:0.75;
+}
+
+.admin-grid input,
+.admin-grid select{
+height:40px;
+border:1px solid rgba(46,46,46,0.2);
+border-radius:10px;
+padding:0 12px;
+font-size:14px;
+}
+
+.admin-actions{
+display:flex;
+gap:8px;
+flex-wrap:wrap;
+margin-top:10px;
+}
+
+.admin-btn{
+height:38px;
+padding:0 14px;
+border-radius:10px;
+border:1px solid rgba(46,46,46,0.2);
+background:#fff;
+cursor:pointer;
+font-size:13px;
+}
+
+.admin-btn.primary{
+background:#2e2e2e;
+color:#fff;
+border-color:#2e2e2e;
+}
+
+.admin-status{
+margin-top:10px;
+font-size:13px;
+min-height:18px;
 }
 
 .social-shutter-overlay{
@@ -1498,6 +1688,13 @@ padding:9px 12px;
 .footer-signature{
 font-size:10px;
 }
+
+.admin-launch{
+bottom:10px;
+right:10px;
+font-size:11px;
+padding:7px 10px;
+}
 }
 
 @media(max-width:420px){
@@ -1757,19 +1954,19 @@ and experimentation is essential.
 <section class="studio" id="studio">
 <h2>PHOTO ARCHIVE</h2>
 <div class="archive-categories">
-<button class="category-tile" type="button" data-title="Eventos" data-photos="eventos/_MG_0861.jpeg|eventos/_MG_0849.jpeg|eventos/_MG_0833.jpeg|eventos/_MG_0806.jpeg|eventos/_MG_0734.jpeg|eventos/_MG_0666.jpeg|eventos/_MG_0864.jpeg|eventos/ED.jpg|eventos/ED (2).jpg|eventos/ED (3).jpg|eventos/ED (4).jpg|eventos/ED (5).jpg|eventos/ED (6).jpg|eventos/ED (7).jpg|eventos/ED (8).jpg|eventos/ED (9).jpg|eventos/ED (10).jpg|eventos/ET.jpg|eventos/ET (2).jpg|eventos/ET (3).jpg|eventos/ET (4).jpg|eventos/ET (5).jpg|eventos/ET (6).jpg">
+<button class="category-tile" type="button" data-title="Eventos" data-photos="eventos/web/_MG_0861.jpeg|eventos/web/_MG_0849.jpeg|eventos/web/_MG_0833.jpeg|eventos/web/_MG_0806.jpeg|eventos/web/_MG_0734.jpeg|eventos/web/_MG_0666.jpeg|eventos/web/_MG_0864.jpeg|eventos/web/ED.jpg|eventos/web/ED (2).jpg|eventos/web/ED (3).jpg|eventos/web/ED (4).jpg|eventos/web/ED (5).jpg|eventos/web/ED (6).jpg|eventos/web/ED (7).jpg|eventos/web/ED (9).jpg|eventos/web/ED (10).jpg|eventos/web/ET.jpg|eventos/web/ET (2).jpg|eventos/web/ET (3).jpg|eventos/web/ET (4).jpg|eventos/web/ET (5).jpg|eventos/web/ET (6).jpg">
 <div class="category-head">
 <div class="category-title">Eventos</div>
 <div class="category-meta">06 FOTOS</div>
 </div>
 <div class="stack-preview">
-<img class="stack-photo cover" src="eventos/_MG_0861.jpeg" alt="Portada eventos">
-<img class="stack-photo mid" src="eventos/_MG_0849.jpeg" alt="Eventos preview 1">
-<img class="stack-photo top" src="eventos/_MG_0833.jpeg" alt="Eventos preview 2">
+<img class="stack-photo cover" src="eventos/web/_MG_0861.jpeg" alt="Portada eventos">
+<img class="stack-photo mid" src="eventos/web/_MG_0849.jpeg" alt="Eventos preview 1">
+<img class="stack-photo top" src="eventos/web/_MG_0833.jpeg" alt="Eventos preview 2">
 </div>
 </button>
 
-<button class="category-tile" type="button" data-title="Retrato" data-photos="fotos/_MG_0297.JPG|fotos/_MG_0308.JPG|fotos/_MG_0296.JPG|fotos/_MG_0062.JPG|fotos/_MG_0052.JPG|fotos/_MG_0061.JPG|fotos/IMG_7978.JPG|fotos/IMG_7943.JPG|fotos/IMG_7973.JPG|fotos/IMG_7883.jpg|fotos/IMG_7874.jpg|fotos/IMG_7870.jpg|fotos/IMG_2869.JPG|fotos/IMG_2849.JPG|fotos/IMG_2837.JPG|fotos/R.jpg|fotos/R (2).jpg|fotos/R (3).jpg">
+<button class="category-tile" type="button" data-title="Retrato" data-photos="fotos/_MG_0297.JPG|fotos/_MG_0308.JPG|fotos/_MG_0296.JPG|fotos/web/_MG_0062.JPG|fotos/web/_MG_0052.JPG|fotos/web/_MG_0061.JPG|fotos/web/IMG_7978.JPG|fotos/web/IMG_7943.JPG|fotos/web/IMG_7973.JPG|fotos/web/IMG_7883.jpg|fotos/web/IMG_7874.jpg|fotos/web/IMG_7870.jpg|fotos/web/IMG_2869.JPG|fotos/web/IMG_2849.JPG|fotos/web/IMG_2837.JPG|fotos/web/R.jpg|fotos/web/R (2).jpg|fotos/web/R (3).jpg">
 <div class="category-head">
 <div class="category-title">Retrato</div>
 <div class="category-meta">06 FOTOS</div>
@@ -1807,12 +2004,16 @@ and experimentation is essential.
 <div class="lightbox" id="lightbox" aria-hidden="true">
 <div class="lightbox-content">
 <button class="lightbox-close" id="lightboxClose" type="button" aria-label="Cerrar imagen">×</button>
+<button class="lightbox-nav lightbox-prev" id="lightboxPrev" type="button" aria-label="Foto anterior">‹</button>
+<button class="lightbox-nav lightbox-next" id="lightboxNext" type="button" aria-label="Foto siguiente">›</button>
+<div class="lightbox-viewport" id="lightboxViewport">
 <img class="lightbox-img" id="lightboxImg" src="" alt="Foto ampliada">
+</div>
 <div class="zoom-ui">
 <button class="zoom-btn" id="zoomOut" type="button" aria-label="Alejar">−</button>
-<input class="zoom-range" id="zoomRange" type="range" min="100" max="240" step="5" value="100" aria-label="Zoom de imagen">
 <button class="zoom-btn" id="zoomIn" type="button" aria-label="Acercar">+</button>
 <span class="zoom-value" id="zoomValue">100%</span>
+<button class="zoom-btn" id="zoomReset" type="button" aria-label="Restablecer zoom">R</button>
 </div>
 </div>
 </div>
@@ -1850,6 +2051,42 @@ TikTok
 <div class="social-shutter-text" id="socialShutterText">Abriendo red social...</div>
 </div>
 
+<button class="admin-launch" id="adminLaunch" type="button">Admin</button>
+<div class="admin-panel" id="adminPanel" aria-hidden="true">
+<div class="admin-card">
+<div class="admin-head">
+<h3 class="admin-title">Admin Valenfoco</h3>
+<button class="admin-close" id="adminClose" type="button" aria-label="Cerrar">×</button>
+</div>
+<p class="admin-note">Solo la cuenta autorizada puede subir fotos. Visitantes no tienen acceso.</p>
+<div class="admin-grid">
+<label for="adminPass">Clave de acceso</label>
+<input id="adminPass" type="password" placeholder="valeenfoco">
+<div class="admin-actions">
+<button class="admin-btn primary" id="adminSendLink" type="button">Ingresar</button>
+<button class="admin-btn" id="adminLogout" type="button">Salir</button>
+</div>
+<div class="admin-upload locked" id="adminUploadBlock">
+<hr>
+<label for="adminCategory">Categoria</label>
+<select id="adminCategory">
+<option value="Eventos">Eventos</option>
+<option value="Retrato">Retrato</option>
+<option value="Producto">Producto</option>
+</select>
+<label for="adminFile">Foto</label>
+<input id="adminFile" type="file" accept="image/*">
+<div class="admin-actions">
+<button class="admin-btn primary" id="adminUpload" type="button">Subir foto</button>
+<button class="admin-btn" id="adminRefresh" type="button">Actualizar galeria</button>
+</div>
+</div>
+</div>
+<div class="admin-status" id="adminStatus"></div>
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 (() => {
 const intro = document.getElementById('introOverlay');
@@ -1898,37 +2135,173 @@ if (window.innerWidth > 900) closeMenu();
 })();
 
 (() => {
+const SUPABASE_URL = 'https://mmvicehscqpquspwecck.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1tdmljZWhzY3FwcXVzcHdlY2NrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0ODU2ODQsImV4cCI6MjA5MzA2MTY4NH0.xWS5VDyHQ7FlOrUkdc8z3pm8_wS3v25eLqS17wPPYqY';
+const SUPABASE_BUCKET = 'portfolio';
+const SUPABASE_TABLE = 'photos';
+const ALLOWED_ADMIN_EMAIL = 'valeenfoco@gmail.com';
+const isSupabaseReady = Boolean(SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase);
+const sb = isSupabaseReady ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 const categoryTiles = Array.from(document.querySelectorAll('.category-tile'));
 const panel = document.getElementById('archivePanel');
 const panelTitle = document.getElementById('panelTitle');
 const panelCount = document.getElementById('panelCount');
 const panelGrid = document.getElementById('panelGrid');
 const lightbox = document.getElementById('lightbox');
+const lightboxContent = lightbox.querySelector('.lightbox-content');
 const lightboxImg = document.getElementById('lightboxImg');
+const lightboxViewport = document.getElementById('lightboxViewport');
 const lightboxClose = document.getElementById('lightboxClose');
-const zoomRange = document.getElementById('zoomRange');
+const lightboxPrev = document.getElementById('lightboxPrev');
+const lightboxNext = document.getElementById('lightboxNext');
 const zoomOut = document.getElementById('zoomOut');
 const zoomIn = document.getElementById('zoomIn');
+const zoomReset = document.getElementById('zoomReset');
 const zoomValue = document.getElementById('zoomValue');
-if (!categoryTiles.length || !panel || !panelTitle || !panelCount || !panelGrid || !lightbox || !lightboxImg || !lightboxClose || !zoomRange || !zoomOut || !zoomIn || !zoomValue) return;
+const adminLaunch = document.getElementById('adminLaunch');
+const adminPanel = document.getElementById('adminPanel');
+const adminClose = document.getElementById('adminClose');
+const adminPass = document.getElementById('adminPass');
+const adminSendLink = document.getElementById('adminSendLink');
+const adminLogout = document.getElementById('adminLogout');
+const adminCategory = document.getElementById('adminCategory');
+const adminFile = document.getElementById('adminFile');
+const adminUpload = document.getElementById('adminUpload');
+const adminRefresh = document.getElementById('adminRefresh');
+const adminStatus = document.getElementById('adminStatus');
+const adminUploadBlock = document.getElementById('adminUploadBlock');
+if (!categoryTiles.length || !panel || !panelTitle || !panelCount || !panelGrid || !lightbox || !lightboxImg || !lightboxViewport || !lightboxClose || !lightboxPrev || !lightboxNext || !zoomOut || !zoomIn || !zoomReset || !zoomValue) return;
 
 let currentZoom = 100;
+let panX = 0;
+let panY = 0;
+let isPanning = false;
+let panStartX = 0;
+let panStartY = 0;
+let pinchStartDistance = 0;
+let pinchStartZoom = 100;
+let activePhotos = [];
+let activeIndex = -1;
+let uiTimer = null;
+let gestureStartX = 0;
+let gestureStartY = 0;
+let gestureLastX = 0;
+let gestureLastY = 0;
+let remoteByTitle = null;
+let currentTile = null;
+let adminReady = false;
 
-function applyZoom(value) {
+const fallbackByTitle = Object.fromEntries(categoryTiles.map((tile) => {
+const title = tile.dataset.title || '';
+const raw = tile.dataset.photos || '';
+const list = raw.split('|').map((item) => item.trim()).filter(Boolean);
+return [title, list];
+}));
+
+function setAdminStatus(message, error = false) {
+if (!adminStatus) return;
+adminStatus.textContent = message;
+adminStatus.style.color = error ? '#b42318' : '#2e2e2e';
+}
+
+function setAdminReady(ready) {
+adminReady = ready;
+if (!adminUploadBlock) return;
+adminUploadBlock.classList.toggle('locked', !ready);
+}
+
+async function fetchRemotePhotos() {
+if (!sb) return null;
+const { data, error } = await sb.from(SUPABASE_TABLE)
+  .select('category, public_url, sort_order, is_active')
+  .eq('is_active', true)
+  .order('sort_order', { ascending: true });
+if (error) throw error;
+const grouped = { Eventos: [], Retrato: [], Producto: [] };
+(data || []).forEach((row) => {
+if (!row.category || !row.public_url) return;
+if (!grouped[row.category]) grouped[row.category] = [];
+grouped[row.category].push(row.public_url);
+});
+return grouped;
+}
+
+async function refreshRemotePhotos() {
+if (!sb) return false;
+try {
+const grouped = await fetchRemotePhotos();
+if (grouped) remoteByTitle = grouped;
+if (currentTile) renderPanel(currentTile);
+return true;
+} catch (error) {
+console.error(error);
+setAdminStatus(`No se pudo actualizar galeria: ${error.message}`, true);
+return false;
+}
+}
+
+function getPanLimits() {
+const vw = lightboxViewport.clientWidth;
+const vh = lightboxViewport.clientHeight;
+const nw = lightboxImg.naturalWidth || 0;
+const nh = lightboxImg.naturalHeight || 0;
+if (!vw || !vh || !nw || !nh) return { x: 0, y: 0 };
+const baseScale = Math.min(vw / nw, vh / nh);
+const baseW = nw * baseScale;
+const baseH = nh * baseScale;
+const scaledW = baseW * (currentZoom / 100);
+const scaledH = baseH * (currentZoom / 100);
+return {
+x: Math.max(0, (scaledW - vw) / 2),
+y: Math.max(0, (scaledH - vh) / 2)
+};
+}
+
+function clampPan() {
+const limits = getPanLimits();
+panX = Math.max(-limits.x, Math.min(limits.x, panX));
+panY = Math.max(-limits.y, Math.min(limits.y, panY));
+}
+
+function updateTransform() {
+clampPan();
+lightboxImg.style.transform = `translate(${panX}px, ${panY}px) scale(${currentZoom / 100})`;
+const canPan = currentZoom > 100 && (getPanLimits().x > 0 || getPanLimits().y > 0);
+lightboxViewport.classList.toggle('zoomable', canPan);
+}
+
+function applyZoom(value, anchorX = null, anchorY = null) {
+const prevZoom = currentZoom;
 currentZoom = Math.min(240, Math.max(100, value));
-zoomRange.value = String(currentZoom);
 zoomValue.textContent = `${currentZoom}%`;
-lightboxImg.style.transform = `scale(${currentZoom / 100})`;
+if (anchorX !== null && anchorY !== null && prevZoom !== currentZoom) {
+const factor = (currentZoom / prevZoom) - 1;
+panX -= (anchorX - lightboxViewport.clientWidth / 2) * factor;
+panY -= (anchorY - lightboxViewport.clientHeight / 2) * factor;
+}
+if (currentZoom === 100) {
+panX = 0;
+panY = 0;
+}
+updateTransform();
 }
 
 function getPhotos(tile) {
-const raw = tile.dataset.photos || '';
-return raw.split('|').map((item) => item.trim()).filter(Boolean);
+const title = tile.dataset.title || '';
+const remote = remoteByTitle && remoteByTitle[title];
+const fallback = fallbackByTitle[title] || [];
+if (!remote || !remote.length) return fallback;
+const merged = [...fallback];
+remote.forEach((url) => {
+if (!merged.includes(url)) merged.push(url);
+});
+return merged;
 }
 
 function renderPanel(tile) {
 const title = tile.dataset.title || 'Categoria';
 const photos = getPhotos(tile);
+currentTile = tile;
 panelTitle.textContent = title;
 panelCount.textContent = `${String(photos.length).padStart(2, '0')} FOTOS`;
 panelGrid.innerHTML = photos.map((src, idx) => `<img src="${src}" alt="${title} ${idx + 1}" style="--d:${idx * 35}ms;">`).join('');
@@ -1948,19 +2321,58 @@ lightbox.classList.remove('open');
 lightbox.setAttribute('aria-hidden', 'true');
 lightboxImg.src = '';
 applyZoom(100);
+isPanning = false;
+lightboxViewport.classList.remove('dragging');
+activePhotos = [];
+activeIndex = -1;
+if (uiTimer) clearTimeout(uiTimer);
+lightboxContent.classList.remove('ui-hidden');
+}
+
+function scheduleUiHide() {
+if (uiTimer) clearTimeout(uiTimer);
+lightboxContent.classList.remove('ui-hidden');
+uiTimer = setTimeout(() => {
+if (lightbox.classList.contains('open')) {
+lightboxContent.classList.add('ui-hidden');
+}
+}, 1800);
+}
+
+function showPhotoByIndex(index) {
+if (!activePhotos.length) return;
+const safe = Math.max(0, Math.min(activePhotos.length - 1, index));
+activeIndex = safe;
+lightboxImg.onload = () => updateTransform();
+lightboxImg.src = activePhotos[safe];
+lightboxImg.alt = `Foto ampliada ${safe + 1}`;
+applyZoom(100);
+scheduleUiHide();
+}
+
+function nextPhoto() {
+if (!activePhotos.length) return;
+showPhotoByIndex((activeIndex + 1) % activePhotos.length);
+}
+
+function prevPhoto() {
+if (!activePhotos.length) return;
+showPhotoByIndex((activeIndex - 1 + activePhotos.length) % activePhotos.length);
 }
 
 panelGrid.addEventListener('click', (event) => {
 const img = event.target.closest('img');
 if (!img) return;
-lightboxImg.src = img.src;
-lightboxImg.alt = img.alt || 'Foto ampliada';
-applyZoom(100);
+activePhotos = Array.from(panelGrid.querySelectorAll('img')).map((node) => node.src);
+activeIndex = activePhotos.findIndex((src) => src === img.src);
+showPhotoByIndex(activeIndex < 0 ? 0 : activeIndex);
 lightbox.classList.add('open');
 lightbox.setAttribute('aria-hidden', 'false');
 });
 
 lightboxClose.addEventListener('click', closeLightbox);
+lightboxPrev.addEventListener('click', prevPhoto);
+lightboxNext.addEventListener('click', nextPhoto);
 
 lightbox.addEventListener('click', (event) => {
 if (event.target === lightbox) closeLightbox();
@@ -1971,14 +2383,257 @@ if (event.key === 'Escape') closeLightbox();
 if (!lightbox.classList.contains('open')) return;
 if (event.key === '+') applyZoom(currentZoom + 10);
 if (event.key === '-') applyZoom(currentZoom - 10);
-});
-
-zoomRange.addEventListener('input', (event) => {
-applyZoom(Number(event.target.value));
+if (event.key === 'ArrowRight') nextPhoto();
+if (event.key === 'ArrowLeft') prevPhoto();
 });
 
 zoomIn.addEventListener('click', () => applyZoom(currentZoom + 10));
 zoomOut.addEventListener('click', () => applyZoom(currentZoom - 10));
+zoomReset.addEventListener('click', () => applyZoom(100));
+zoomIn.addEventListener('click', scheduleUiHide);
+zoomOut.addEventListener('click', scheduleUiHide);
+zoomReset.addEventListener('click', scheduleUiHide);
+
+function startPan(clientX, clientY) {
+if (currentZoom <= 100) return;
+isPanning = true;
+panStartX = clientX - panX;
+panStartY = clientY - panY;
+lightboxViewport.classList.add('dragging');
+}
+
+function movePan(clientX, clientY) {
+if (!isPanning) return;
+panX = clientX - panStartX;
+panY = clientY - panStartY;
+updateTransform();
+}
+
+function endPan() {
+isPanning = false;
+lightboxViewport.classList.remove('dragging');
+}
+
+lightboxViewport.addEventListener('mousedown', (event) => {
+event.preventDefault();
+startPan(event.clientX, event.clientY);
+});
+
+window.addEventListener('mousemove', (event) => movePan(event.clientX, event.clientY));
+window.addEventListener('mouseup', endPan);
+
+lightboxViewport.addEventListener('touchstart', (event) => {
+if (event.touches[0]) {
+gestureStartX = event.touches[0].clientX;
+gestureStartY = event.touches[0].clientY;
+gestureLastX = gestureStartX;
+gestureLastY = gestureStartY;
+}
+if (event.touches.length === 2) {
+const dx = event.touches[0].clientX - event.touches[1].clientX;
+const dy = event.touches[0].clientY - event.touches[1].clientY;
+pinchStartDistance = Math.hypot(dx, dy);
+pinchStartZoom = currentZoom;
+endPan();
+return;
+}
+if (!event.touches[0]) return;
+startPan(event.touches[0].clientX, event.touches[0].clientY);
+}, { passive: true });
+
+lightboxViewport.addEventListener('touchmove', (event) => {
+if (event.touches[0]) {
+gestureLastX = event.touches[0].clientX;
+gestureLastY = event.touches[0].clientY;
+}
+if (event.touches.length === 2) {
+event.preventDefault();
+const dx = event.touches[0].clientX - event.touches[1].clientX;
+const dy = event.touches[0].clientY - event.touches[1].clientY;
+const dist = Math.hypot(dx, dy);
+if (pinchStartDistance > 0) {
+const rect = lightboxViewport.getBoundingClientRect();
+const anchorX = ((event.touches[0].clientX + event.touches[1].clientX) / 2) - rect.left;
+const anchorY = ((event.touches[0].clientY + event.touches[1].clientY) / 2) - rect.top;
+applyZoom(pinchStartZoom * (dist / pinchStartDistance), anchorX, anchorY);
+}
+return;
+}
+if (!isPanning || !event.touches[0]) return;
+event.preventDefault();
+movePan(event.touches[0].clientX, event.touches[0].clientY);
+}, { passive: false });
+
+lightboxViewport.addEventListener('touchend', () => {
+pinchStartDistance = 0;
+endPan();
+if (currentZoom === 100) {
+const dx = gestureLastX - gestureStartX;
+const dy = gestureLastY - gestureStartY;
+if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy)) {
+if (dx < 0) nextPhoto();
+else prevPhoto();
+}
+}
+}, { passive: true });
+lightboxViewport.addEventListener('wheel', (event) => {
+event.preventDefault();
+const rect = lightboxViewport.getBoundingClientRect();
+applyZoom(
+currentZoom + (event.deltaY < 0 ? 8 : -8),
+event.clientX - rect.left,
+event.clientY - rect.top
+);
+}, { passive: false });
+lightboxViewport.addEventListener('dblclick', (event) => {
+const rect = lightboxViewport.getBoundingClientRect();
+applyZoom(
+currentZoom > 100 ? 100 : 170,
+event.clientX - rect.left,
+event.clientY - rect.top
+);
+});
+lightbox.addEventListener('mousemove', scheduleUiHide);
+lightbox.addEventListener('touchstart', scheduleUiHide, { passive: true });
+window.addEventListener('resize', () => {
+if (lightbox.classList.contains('open')) updateTransform();
+});
+
+if (adminLaunch && adminPanel && adminClose) {
+const showAdminButton = window.location.search.includes('admin=1');
+if (showAdminButton) adminLaunch.style.display = 'inline-flex';
+
+adminLaunch.addEventListener('click', () => {
+adminPanel.classList.add('open');
+adminPanel.setAttribute('aria-hidden', 'false');
+});
+
+adminClose.addEventListener('click', () => {
+adminPanel.classList.remove('open');
+adminPanel.setAttribute('aria-hidden', 'true');
+});
+
+if (!sb) {
+setAdminStatus('Configura SUPABASE_URL y SUPABASE_ANON_KEY para activar admin.', true);
+} else {
+refreshRemotePhotos();
+setAdminReady(false);
+sb.auth.getSession().then(({ data }) => {
+const userEmail = (data?.session?.user?.email || '').toLowerCase();
+if (userEmail === ALLOWED_ADMIN_EMAIL) {
+setAdminReady(true);
+setAdminStatus('Sesion activa. Ya puedes subir fotos.');
+}
+});
+}
+
+if (adminSendLink) {
+adminSendLink.addEventListener('click', async () => {
+if (!sb) return;
+const password = (adminPass.value || '').trim();
+if (!password) {
+setAdminStatus('Escribe la clave de acceso.', true);
+return;
+}
+const { data: sessionData } = await sb.auth.getSession();
+const currentEmail = (sessionData?.session?.user?.email || '').toLowerCase();
+if (currentEmail === ALLOWED_ADMIN_EMAIL) {
+setAdminReady(true);
+setAdminStatus('Listo. Ya puedes subir fotos.');
+return;
+}
+setAdminStatus('Validando acceso...');
+const { error } = await sb.auth.signInWithPassword({
+email: ALLOWED_ADMIN_EMAIL,
+password
+});
+if (error) {
+setAdminStatus('Clave incorrecta o usuario no configurado en Supabase Auth.', true);
+return;
+}
+setAdminReady(true);
+setAdminStatus('Acceso correcto. Ya puedes subir fotos.');
+adminPass.value = '';
+});
+}
+
+if (adminLogout) {
+adminLogout.addEventListener('click', async () => {
+if (!sb) return;
+await sb.auth.signOut();
+setAdminReady(false);
+setAdminStatus('Sesion cerrada.');
+});
+}
+
+if (adminRefresh) {
+adminRefresh.addEventListener('click', async () => {
+if (!sb) return;
+setAdminStatus('Actualizando galeria...');
+const ok = await refreshRemotePhotos();
+if (ok) setAdminStatus('Galeria actualizada.');
+});
+}
+
+if (adminUpload) {
+adminUpload.addEventListener('click', async () => {
+if (!sb) return;
+if (!adminReady) {
+setAdminStatus('Primero valida el correo para habilitar la subida.', true);
+return;
+}
+const { data: sessionData } = await sb.auth.getSession();
+const user = sessionData?.session?.user;
+const signedEmail = (user?.email || '').toLowerCase();
+if (!user || signedEmail !== ALLOWED_ADMIN_EMAIL) {
+setAdminStatus('Inicia sesion con el email autorizado para subir fotos.', true);
+return;
+}
+const category = adminCategory.value;
+const file = adminFile.files && adminFile.files[0];
+if (!category || !file) {
+setAdminStatus('Selecciona categoria y foto.', true);
+return;
+}
+
+setAdminStatus('Subiendo foto...');
+const safeName = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
+const path = `${category.toLowerCase()}/${safeName}`;
+const upload = await sb.storage.from(SUPABASE_BUCKET).upload(path, file, {
+cacheControl: '3600',
+upsert: false
+});
+if (upload.error) {
+setAdminStatus(`Error al subir: ${upload.error.message}`, true);
+return;
+}
+
+const pub = sb.storage.from(SUPABASE_BUCKET).getPublicUrl(path);
+const publicUrl = pub?.data?.publicUrl;
+if (!publicUrl) {
+setAdminStatus('No se pudo obtener URL publica.', true);
+return;
+}
+
+const currentList = (remoteByTitle && remoteByTitle[category]) || fallbackByTitle[category] || [];
+const sortOrder = currentList.length + 1;
+const insert = await sb.from(SUPABASE_TABLE).insert({
+category,
+public_url: publicUrl,
+sort_order: sortOrder,
+is_active: true
+});
+if (insert.error) {
+setAdminStatus(`Error al guardar en base: ${insert.error.message}`, true);
+return;
+}
+
+setAdminStatus('Foto subida correctamente.');
+adminFile.value = '';
+await refreshRemotePhotos();
+});
+}
+}
 
 categoryTiles.forEach((tile) => {
 tile.addEventListener('click', () => {
@@ -1999,6 +2654,10 @@ panel.classList.add('open');
 setTimeout(scrollToPanelStart, 40);
 });
 });
+
+if (sb) {
+refreshRemotePhotos();
+}
 })();
 
 (() => {
