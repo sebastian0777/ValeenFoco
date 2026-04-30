@@ -749,6 +749,44 @@ transform:translateY(-4px) scale(1.02);
 box-shadow:0 20px 32px rgba(0,0,0,0.2);
 }
 
+.panel-item{
+position:relative;
+}
+
+.panel-item img{
+width:100%;
+}
+
+.photo-delete{
+position:absolute;
+top:8px;
+right:8px;
+width:28px;
+height:28px;
+border-radius:50%;
+border:1px solid rgba(255,255,255,0.45);
+background:rgba(0,0,0,0.45);
+color:#fff;
+font-size:14px;
+line-height:1;
+display:grid;
+place-items:center;
+cursor:pointer;
+opacity:0;
+transform:translateY(-4px);
+transition:opacity 0.18s ease, transform 0.18s ease, background 0.18s ease;
+z-index:3;
+}
+
+.panel-item:hover .photo-delete{
+opacity:1;
+transform:translateY(0);
+}
+
+.photo-delete:hover{
+background:rgba(178,34,34,0.88);
+}
+
 .lightbox{
 position:fixed;
 inset:0;
@@ -1016,14 +1054,36 @@ position:fixed;
 right:14px;
 bottom:14px;
 z-index:1200;
-border:1px solid rgba(46,46,46,0.2);
-background:rgba(243,241,239,0.94);
-color:var(--text);
+border:1px solid rgba(122,87,87,0.28);
+background:linear-gradient(140deg, rgba(255,255,255,0.95), rgba(246,235,232,0.95));
+color:#6e5050;
 border-radius:999px;
-padding:8px 12px;
-font-size:12px;
-letter-spacing:0.4px;
+padding:9px 14px;
+font-size:13px;
+font-weight:600;
+letter-spacing:0.6px;
 cursor:pointer;
+box-shadow:0 8px 18px rgba(0,0,0,0.12);
+overflow:hidden;
+transition:transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease, color 0.22s ease;
+}
+
+.admin-launch::before{
+content:'';
+position:absolute;
+top:0;
+left:-130%;
+width:60%;
+height:100%;
+background:linear-gradient(100deg, transparent, rgba(255,255,255,0.65), transparent);
+animation:meShimmer 3.4s ease-in-out infinite;
+}
+
+.admin-launch:hover{
+transform:translateY(-2px);
+box-shadow:0 12px 24px rgba(0,0,0,0.16);
+border-color:rgba(122,87,87,0.42);
+color:#7a5757;
 }
 
 .admin-panel{
@@ -1033,56 +1093,93 @@ z-index:2200;
 display:none;
 align-items:center;
 justify-content:center;
-background:rgba(0,0,0,0.6);
+background:
+radial-gradient(circle at 12% 14%, rgba(195,142,142,0.26), transparent 44%),
+radial-gradient(circle at 84% 86%, rgba(241,161,200,0.2), transparent 38%),
+rgba(14,14,14,0.52);
 padding:18px;
+backdrop-filter:blur(4px);
 }
 
 .admin-panel.open{
 display:flex;
+animation:adminFadeIn 0.35s ease both;
 }
 
 .admin-card{
 width:min(96vw, 620px);
 max-height:90vh;
 overflow:auto;
-background:#fff;
-border-radius:16px;
-padding:18px;
-box-shadow:0 20px 48px rgba(0,0,0,0.28);
+background:
+linear-gradient(165deg, rgba(255,255,255,0.97), rgba(248,243,241,0.96));
+border-radius:24px;
+padding:22px;
+border:1px solid rgba(126,92,92,0.18);
+box-shadow:
+0 24px 58px rgba(20,20,20,0.34),
+inset 0 1px 0 rgba(255,255,255,0.75);
+animation:adminCardIn 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
 .admin-head{
 display:flex;
 align-items:center;
 justify-content:space-between;
-margin-bottom:12px;
+margin-bottom:10px;
 }
 
 .admin-title{
 font-family:'Playfair Display', serif;
-font-size:30px;
-color:#7e5c5c;
+font-size:44px;
+line-height:0.95;
+color:#7a5757;
+letter-spacing:-0.4px;
+text-shadow:0 1px 0 rgba(255,255,255,0.9);
 }
 
 .admin-close{
-border:1px solid rgba(46,46,46,0.2);
-background:transparent;
-border-radius:10px;
-width:34px;
-height:34px;
-font-size:20px;
+border:1px solid rgba(46,46,46,0.14);
+background:rgba(255,255,255,0.78);
+border-radius:13px;
+width:42px;
+height:42px;
+font-size:24px;
 cursor:pointer;
+transition:transform 0.22s ease, background 0.22s ease, border-color 0.22s ease;
+}
+
+.admin-close:hover{
+transform:translateY(-1px);
+background:#fff;
+border-color:rgba(122,87,87,0.35);
 }
 
 .admin-note{
-font-size:13px;
-opacity:0.72;
-margin-bottom:14px;
+font-size:15px;
+line-height:1.45;
+opacity:0.78;
+margin-bottom:16px;
 }
 
 .admin-upload{
 display:grid;
 gap:10px;
+position:relative;
+padding:14px;
+border-radius:16px;
+background:linear-gradient(155deg, rgba(255,255,255,0.82), rgba(249,241,239,0.84));
+border:1px solid rgba(122,87,87,0.18);
+box-shadow:0 12px 24px rgba(39,30,30,0.08);
+animation:uploadBlockIn 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.admin-login{
+display:grid;
+gap:10px;
+}
+
+.admin-login.hidden{
+display:none;
 }
 
 .admin-upload.locked{
@@ -1090,37 +1187,243 @@ opacity:0.45;
 pointer-events:none;
 }
 
+.admin-upload.hidden{
+display:none;
+}
+
+.admin-welcome{
+display:none;
+margin:10px 0 6px;
+padding:16px 14px;
+border-radius:14px;
+background:linear-gradient(135deg, rgba(195,142,142,0.18), rgba(241,161,200,0.14));
+border:1px solid rgba(122,87,87,0.2);
+text-align:center;
+}
+
+.admin-welcome.show{
+display:block;
+animation:welcomeIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.admin-welcome h4{
+font-family:'Playfair Display', serif;
+font-size:30px;
+color:#7a5757;
+margin-bottom:5px;
+}
+
+.admin-welcome p{
+font-size:14px;
+opacity:0.82;
+}
+
 .admin-grid{
 display:grid;
-gap:10px;
+gap:11px;
 }
 
 .admin-grid label{
 font-size:12px;
-letter-spacing:0.5px;
+letter-spacing:1.4px;
 text-transform:uppercase;
-opacity:0.75;
+opacity:0.72;
+font-weight:600;
 }
 
 .admin-grid input,
 .admin-grid select{
-height:40px;
-border:1px solid rgba(46,46,46,0.2);
-border-radius:10px;
-padding:0 12px;
-font-size:14px;
+height:48px;
+border:1px solid rgba(122,87,87,0.24);
+border-radius:14px;
+padding:0 14px;
+font-size:15px;
+background:rgba(255,255,255,0.86);
+outline:0;
+transition:border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+.admin-grid input:focus,
+.admin-grid select:focus{
+border-color:rgba(122,87,87,0.56);
+box-shadow:0 0 0 3px rgba(195,142,142,0.17);
+background:#fff;
+}
+
+#adminFile{
+padding-top:10px;
+}
+
+#adminFile::file-selector-button{
+height:30px;
+border-radius:9px;
+border:1px solid rgba(46,46,46,0.18);
+background:#fff;
+padding:0 10px;
+margin-right:10px;
+cursor:pointer;
+font-size:13px;
+}
+
+.admin-grid hr{
+border:0;
+height:1px;
+background:linear-gradient(90deg, transparent, rgba(122,87,87,0.4), transparent);
+margin:8px 0 2px;
+}
+
+.admin-upload label[for="adminCategory"]::before{
+content:'✦';
+margin-right:6px;
+font-size:11px;
+opacity:0.7;
+}
+
+.admin-upload label[for="adminFile"]::before{
+content:'✦';
+margin-right:6px;
+font-size:11px;
+opacity:0.7;
 }
 
 .admin-actions{
 display:flex;
-gap:8px;
+gap:10px;
 flex-wrap:wrap;
-margin-top:10px;
+margin-top:6px;
 }
 
 .admin-btn{
-height:38px;
-padding:0 14px;
+height:42px;
+padding:0 16px;
+border-radius:13px;
+border:1px solid rgba(46,46,46,0.18);
+background:rgba(255,255,255,0.86);
+cursor:pointer;
+font-size:15px;
+transition:transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease, background 0.22s ease;
+}
+
+.admin-btn:hover{
+transform:translateY(-1px);
+border-color:rgba(122,87,87,0.35);
+box-shadow:0 8px 16px rgba(0,0,0,0.1);
+}
+
+.admin-btn.primary{
+background:linear-gradient(135deg, #2f2f32, #1e1e22);
+color:#fff;
+border-color:#2f2f32;
+box-shadow:0 10px 18px rgba(25,25,28,0.28);
+}
+
+#adminUpload{
+position:relative;
+overflow:hidden;
+}
+
+#adminUpload::after{
+content:'';
+position:absolute;
+top:0;
+left:-120%;
+width:70%;
+height:100%;
+background:linear-gradient(100deg, transparent, rgba(255,255,255,0.22), transparent);
+transition:left 0.55s ease;
+}
+
+#adminUpload:hover::after{
+left:140%;
+}
+
+.admin-status{
+margin-top:12px;
+font-size:14px;
+min-height:20px;
+padding:8px 10px;
+border-radius:10px;
+background:linear-gradient(135deg, rgba(255,255,255,0.9), rgba(251,246,244,0.92));
+border:1px dashed rgba(122,87,87,0.28);
+transition:transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.admin-status:not(:empty){
+transform:translateY(-1px);
+box-shadow:0 8px 18px rgba(35,27,27,0.08);
+}
+
+@keyframes adminFadeIn{
+0%{opacity:0}
+100%{opacity:1}
+}
+
+@keyframes adminCardIn{
+0%{opacity:0;transform:translateY(18px) scale(0.96)}
+100%{opacity:1;transform:translateY(0) scale(1)}
+}
+
+@keyframes welcomeIn{
+0%{opacity:0;transform:translateY(14px) scale(0.96);filter:blur(1.5px)}
+55%{opacity:1;transform:translateY(-2px) scale(1.01);filter:blur(0)}
+100%{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}
+}
+
+@keyframes uploadBlockIn{
+0%{opacity:0;transform:translateY(10px) scale(0.985)}
+100%{opacity:1;transform:translateY(0) scale(1)}
+}
+
+@keyframes meShimmer{
+0%,70%{left:-130%}
+100%{left:150%}
+}
+
+.confirm-modal{
+position:fixed;
+inset:0;
+z-index:2300;
+display:none;
+align-items:center;
+justify-content:center;
+background:rgba(0,0,0,0.5);
+padding:16px;
+}
+
+.confirm-modal.open{
+display:flex;
+}
+
+.confirm-card{
+width:min(92vw, 380px);
+background:#fff;
+border-radius:14px;
+padding:16px;
+box-shadow:0 20px 46px rgba(0,0,0,0.24);
+}
+
+.confirm-title{
+font-family:'Playfair Display', serif;
+font-size:28px;
+color:#7e5c5c;
+margin-bottom:6px;
+}
+
+.confirm-text{
+font-size:14px;
+opacity:0.8;
+margin-bottom:14px;
+}
+
+.confirm-actions{
+display:flex;
+justify-content:flex-end;
+gap:8px;
+}
+
+.confirm-btn{
+height:36px;
+padding:0 12px;
 border-radius:10px;
 border:1px solid rgba(46,46,46,0.2);
 background:#fff;
@@ -1128,16 +1431,10 @@ cursor:pointer;
 font-size:13px;
 }
 
-.admin-btn.primary{
-background:#2e2e2e;
+.confirm-btn.danger{
+background:#a12b2b;
+border-color:#a12b2b;
 color:#fff;
-border-color:#2e2e2e;
-}
-
-.admin-status{
-margin-top:10px;
-font-size:13px;
-min-height:18px;
 }
 
 .social-shutter-overlay{
@@ -2051,7 +2348,7 @@ TikTok
 <div class="social-shutter-text" id="socialShutterText">Abriendo red social...</div>
 </div>
 
-<button class="admin-launch" id="adminLaunch" type="button">Admin</button>
+<button class="admin-launch" id="adminLaunch" type="button">Me</button>
 <div class="admin-panel" id="adminPanel" aria-hidden="true">
 <div class="admin-card">
 <div class="admin-head">
@@ -2060,13 +2357,19 @@ TikTok
 </div>
 <p class="admin-note">Solo la cuenta autorizada puede subir fotos. Visitantes no tienen acceso.</p>
 <div class="admin-grid">
+<div class="admin-login" id="adminLoginBlock">
 <label for="adminPass">Clave de acceso</label>
 <input id="adminPass" type="password" placeholder="valeenfoco">
 <div class="admin-actions">
 <button class="admin-btn primary" id="adminSendLink" type="button">Ingresar</button>
 <button class="admin-btn" id="adminLogout" type="button">Salir</button>
 </div>
-<div class="admin-upload locked" id="adminUploadBlock">
+</div>
+<div class="admin-welcome" id="adminWelcome">
+<h4>Bienvenida de nuevo, Vale</h4>
+<p>Tu espacio creativo ya está listo para subir nuevas fotos.</p>
+</div>
+<div class="admin-upload locked hidden" id="adminUploadBlock">
 <hr>
 <label for="adminCategory">Categoria</label>
 <select id="adminCategory">
@@ -2083,6 +2386,17 @@ TikTok
 </div>
 </div>
 <div class="admin-status" id="adminStatus"></div>
+</div>
+</div>
+
+<div class="confirm-modal" id="confirmModal" aria-hidden="true">
+<div class="confirm-card">
+<h4 class="confirm-title">Eliminar foto</h4>
+<p class="confirm-text">¿Seguro que deseas eliminar esta foto?</p>
+<div class="confirm-actions">
+<button class="confirm-btn" id="confirmCancel" type="button">Cancelar</button>
+<button class="confirm-btn danger" id="confirmAccept" type="button">Eliminar</button>
+</div>
 </div>
 </div>
 
@@ -2170,6 +2484,11 @@ const adminUpload = document.getElementById('adminUpload');
 const adminRefresh = document.getElementById('adminRefresh');
 const adminStatus = document.getElementById('adminStatus');
 const adminUploadBlock = document.getElementById('adminUploadBlock');
+const adminWelcome = document.getElementById('adminWelcome');
+const adminLoginBlock = document.getElementById('adminLoginBlock');
+const confirmModal = document.getElementById('confirmModal');
+const confirmCancel = document.getElementById('confirmCancel');
+const confirmAccept = document.getElementById('confirmAccept');
 if (!categoryTiles.length || !panel || !panelTitle || !panelCount || !panelGrid || !lightbox || !lightboxImg || !lightboxViewport || !lightboxClose || !lightboxPrev || !lightboxNext || !zoomOut || !zoomIn || !zoomReset || !zoomValue) return;
 
 let currentZoom = 100;
@@ -2190,6 +2509,7 @@ let gestureLastY = 0;
 let remoteByTitle = null;
 let currentTile = null;
 let adminReady = false;
+let resolveConfirm = null;
 
 const fallbackByTitle = Object.fromEntries(categoryTiles.map((tile) => {
 const title = tile.dataset.title || '';
@@ -2208,6 +2528,47 @@ function setAdminReady(ready) {
 adminReady = ready;
 if (!adminUploadBlock) return;
 adminUploadBlock.classList.toggle('locked', !ready);
+adminUploadBlock.classList.toggle('hidden', !ready);
+if (currentTile && panel.classList.contains('open')) {
+renderPanel(currentTile);
+}
+}
+
+function playWelcomeThenEnable() {
+if (!adminWelcome) {
+if (adminLoginBlock) adminLoginBlock.classList.add('hidden');
+setAdminReady(true);
+setAdminStatus('Sesion activa. Ya puedes subir fotos.');
+return;
+}
+if (adminLoginBlock) adminLoginBlock.classList.add('hidden');
+if (adminUploadBlock) adminUploadBlock.classList.add('hidden');
+adminWelcome.classList.add('show');
+setAdminReady(false);
+setTimeout(() => {
+adminWelcome.classList.remove('show');
+setAdminReady(true);
+setAdminStatus('Sesion activa. Ya puedes subir fotos.');
+}, 2800);
+}
+
+function askConfirmDelete() {
+return new Promise((resolve) => {
+if (!confirmModal) return resolve(false);
+resolveConfirm = resolve;
+confirmModal.classList.add('open');
+confirmModal.setAttribute('aria-hidden', 'false');
+});
+}
+
+function closeConfirm(result) {
+if (!confirmModal) return;
+confirmModal.classList.remove('open');
+confirmModal.setAttribute('aria-hidden', 'true');
+if (resolveConfirm) {
+resolveConfirm(result);
+resolveConfirm = null;
+}
 }
 
 async function fetchRemotePhotos() {
@@ -2298,13 +2659,32 @@ if (!merged.includes(url)) merged.push(url);
 return merged;
 }
 
+function getPhotoItems(tile) {
+const title = tile.dataset.title || '';
+const fallback = (fallbackByTitle[title] || []).map((src) => ({ src, remote: false }));
+const remote = ((remoteByTitle && remoteByTitle[title]) || []).map((src) => ({ src, remote: true }));
+const seen = new Set();
+const items = [];
+[...fallback, ...remote].forEach((item) => {
+if (seen.has(item.src)) return;
+seen.add(item.src);
+items.push(item);
+});
+return items;
+}
+
 function renderPanel(tile) {
 const title = tile.dataset.title || 'Categoria';
-const photos = getPhotos(tile);
+const photoItems = getPhotoItems(tile);
+const photos = photoItems.map((item) => item.src);
 currentTile = tile;
 panelTitle.textContent = title;
 panelCount.textContent = `${String(photos.length).padStart(2, '0')} FOTOS`;
-panelGrid.innerHTML = photos.map((src, idx) => `<img src="${src}" alt="${title} ${idx + 1}" style="--d:${idx * 35}ms;">`).join('');
+panelGrid.innerHTML = photoItems.map((item, idx) => `
+<div class="panel-item">
+<img src="${item.src}" alt="${title} ${idx + 1}" style="--d:${idx * 35}ms;">
+${adminReady && item.remote ? `<button class="photo-delete" type="button" data-delete-src="${item.src}" aria-label="Eliminar foto">🗑</button>` : ''}
+</div>`).join('');
 }
 
 function scrollToPanelStart() {
@@ -2361,6 +2741,38 @@ showPhotoByIndex((activeIndex - 1 + activePhotos.length) % activePhotos.length);
 }
 
 panelGrid.addEventListener('click', (event) => {
+const deleteBtn = event.target.closest('.photo-delete');
+if (deleteBtn) {
+event.preventDefault();
+event.stopPropagation();
+if (!sb || !adminReady) {
+setAdminStatus('Inicia sesion admin para eliminar fotos.', true);
+return;
+}
+const src = deleteBtn.getAttribute('data-delete-src');
+if (!src) return;
+(async () => {
+const ok = await askConfirmDelete();
+if (!ok) return;
+try {
+setAdminStatus('Eliminando foto...');
+const { error: delRowError } = await sb.from(SUPABASE_TABLE).delete().eq('public_url', src);
+if (delRowError) throw delRowError;
+const marker = `/storage/v1/object/public/${SUPABASE_BUCKET}/`;
+const idx = src.indexOf(marker);
+if (idx >= 0) {
+const objectPath = src.slice(idx + marker.length);
+await sb.storage.from(SUPABASE_BUCKET).remove([objectPath]);
+}
+await refreshRemotePhotos();
+if (currentTile) renderPanel(currentTile);
+setAdminStatus('Foto eliminada.');
+} catch (error) {
+setAdminStatus(`No se pudo eliminar: ${error.message}`, true);
+}
+})();
+return;
+}
 const img = event.target.closest('img');
 if (!img) return;
 activePhotos = Array.from(panelGrid.querySelectorAll('img')).map((node) => node.src);
@@ -2378,7 +2790,23 @@ lightbox.addEventListener('click', (event) => {
 if (event.target === lightbox) closeLightbox();
 });
 
+if (confirmCancel) {
+confirmCancel.addEventListener('click', () => closeConfirm(false));
+}
+if (confirmAccept) {
+confirmAccept.addEventListener('click', () => closeConfirm(true));
+}
+if (confirmModal) {
+confirmModal.addEventListener('click', (event) => {
+if (event.target === confirmModal) closeConfirm(false);
+});
+}
+
 window.addEventListener('keydown', (event) => {
+if (event.key === 'Escape' && confirmModal && confirmModal.classList.contains('open')) {
+closeConfirm(false);
+return;
+}
 if (event.key === 'Escape') closeLightbox();
 if (!lightbox.classList.contains('open')) return;
 if (event.key === '+') applyZoom(currentZoom + 10);
@@ -2506,6 +2934,9 @@ if (showAdminButton) adminLaunch.style.display = 'inline-flex';
 adminLaunch.addEventListener('click', () => {
 adminPanel.classList.add('open');
 adminPanel.setAttribute('aria-hidden', 'false');
+if (adminLoginBlock) adminLoginBlock.classList.remove('hidden');
+if (adminUploadBlock) adminUploadBlock.classList.add('hidden');
+if (adminWelcome) adminWelcome.classList.remove('show');
 });
 
 adminClose.addEventListener('click', () => {
@@ -2521,8 +2952,7 @@ setAdminReady(false);
 sb.auth.getSession().then(({ data }) => {
 const userEmail = (data?.session?.user?.email || '').toLowerCase();
 if (userEmail === ALLOWED_ADMIN_EMAIL) {
-setAdminReady(true);
-setAdminStatus('Sesion activa. Ya puedes subir fotos.');
+playWelcomeThenEnable();
 }
 });
 }
@@ -2538,8 +2968,7 @@ return;
 const { data: sessionData } = await sb.auth.getSession();
 const currentEmail = (sessionData?.session?.user?.email || '').toLowerCase();
 if (currentEmail === ALLOWED_ADMIN_EMAIL) {
-setAdminReady(true);
-setAdminStatus('Listo. Ya puedes subir fotos.');
+playWelcomeThenEnable();
 return;
 }
 setAdminStatus('Validando acceso...');
@@ -2551,8 +2980,7 @@ if (error) {
 setAdminStatus('Clave incorrecta o usuario no configurado en Supabase Auth.', true);
 return;
 }
-setAdminReady(true);
-setAdminStatus('Acceso correcto. Ya puedes subir fotos.');
+playWelcomeThenEnable();
 adminPass.value = '';
 });
 }
@@ -2562,6 +2990,8 @@ adminLogout.addEventListener('click', async () => {
 if (!sb) return;
 await sb.auth.signOut();
 setAdminReady(false);
+if (adminLoginBlock) adminLoginBlock.classList.remove('hidden');
+if (adminWelcome) adminWelcome.classList.remove('show');
 setAdminStatus('Sesion cerrada.');
 });
 }
