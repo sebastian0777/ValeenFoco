@@ -724,9 +724,9 @@ display:block;
 .panel-grid{
 display:grid;
 grid-template-columns:repeat(3, minmax(0, 1fr));
-grid-auto-rows:clamp(290px, 30vw, 420px);
 gap:18px;
 overflow:visible;
+align-items:stretch;
 }
 
 .panel-grid img{
@@ -751,7 +751,7 @@ box-shadow:0 20px 32px rgba(0,0,0,0.2);
 
 .panel-item{
 position:relative;
-height:100%;
+aspect-ratio:16 / 10;
 border-radius:14px;
 overflow:hidden;
 display:flex;
@@ -1820,7 +1820,6 @@ font-size:30px;
 
 .panel-grid{
 grid-template-columns:repeat(2, minmax(0, 1fr));
-grid-auto-rows:clamp(270px, 44vw, 390px);
 overflow:visible;
 }
 
@@ -1961,7 +1960,6 @@ font-size:24px;
 
 .panel-grid{
 grid-template-columns:1fr;
-grid-auto-rows:clamp(300px, 88vw, 520px);
 gap:12px;
 overflow:visible;
 }
