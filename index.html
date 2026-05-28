@@ -2454,6 +2454,7 @@ TikTok
 <div class="admin-actions">
 <button class="admin-btn primary" id="adminUpload" type="button">Subir foto</button>
 <button class="admin-btn" id="adminRefresh" type="button">Actualizar galeria</button>
+<button class="admin-btn" id="adminImportCurrent" type="button">Importar fotos actuales</button>
 </div>
 </div>
 </div>
@@ -2554,6 +2555,7 @@ const adminCategory = document.getElementById('adminCategory');
 const adminFile = document.getElementById('adminFile');
 const adminUpload = document.getElementById('adminUpload');
 const adminRefresh = document.getElementById('adminRefresh');
+const adminImportCurrent = document.getElementById('adminImportCurrent');
 const adminStatus = document.getElementById('adminStatus');
 const adminUploadBlock = document.getElementById('adminUploadBlock');
 const adminWelcome = document.getElementById('adminWelcome');
@@ -2738,26 +2740,17 @@ function getPhotos(tile) {
 const title = tile.dataset.title || '';
 const remote = remoteByTitle && remoteByTitle[title];
 const fallback = fallbackByTitle[title] || [];
-if (!remote || !remote.length) return fallback;
-const merged = [...fallback];
-remote.forEach((url) => {
-if (!merged.includes(url)) merged.push(url);
-});
-return merged;
+if (remote && remote.length) return remote;
+return fallback;
 }
 
 function getPhotoItems(tile) {
 const title = tile.dataset.title || '';
-const fallback = (fallbackByTitle[title] || []).map((src) => ({ src, remote: false }));
-const remote = ((remoteByTitle && remoteByTitle[title]) || []).map((src) => ({ src, remote: true }));
-const seen = new Set();
-const items = [];
-[...fallback, ...remote].forEach((item) => {
-if (seen.has(item.src)) return;
-seen.add(item.src);
-items.push(item);
-});
-return items;
+const remote = ((remoteByTitle && remoteByTitle[title]) || []);
+if (remote.length) {
+return remote.map((src) => ({ src, remote: true }));
+}
+return (fallbackByTitle[title] || []).map((src) => ({ src, remote: false }));
 }
 
 function renderPanel(tile) {
@@ -3185,6 +3178,53 @@ if (!sb) return;
 setAdminStatus('Actualizando galeria...');
 const ok = await refreshRemotePhotos();
 if (ok) setAdminStatus('Galeria actualizada.');
+});
+}
+
+if (adminImportCurrent) {
+adminImportCurrent.addEventListener('click', async () => {
+if (!sb) return;
+if (!adminReady) {
+setAdminStatus('Primero inicia sesion para importar fotos.', true);
+return;
+}
+const category = adminCategory.value;
+if (!category) {
+setAdminStatus('Selecciona una categoria.', true);
+return;
+}
+const fallback = fallbackByTitle[category] || [];
+if (!fallback.length) {
+setAdminStatus('No hay fotos base para importar en esta categoria.', true);
+return;
+}
+setAdminStatus('Importando fotos actuales...');
+const currentRemote = (remoteByTitle && remoteByTitle[category]) || [];
+const currentSet = new Set(currentRemote);
+let nextSort = currentRemote.length;
+const rows = [];
+fallback.forEach((src) => {
+if (currentSet.has(src)) return;
+nextSort += 1;
+rows.push({
+category,
+public_url: src,
+sort_order: nextSort,
+is_active: true
+});
+});
+if (!rows.length) {
+setAdminStatus('Esta categoria ya esta importada y editable.');
+return;
+}
+const { error } = await sb.from(SUPABASE_TABLE).insert(rows);
+if (error) {
+setAdminStatus(`No se pudo importar: ${error.message}`, true);
+return;
+}
+await refreshRemotePhotos();
+if (currentTile) renderPanel(currentTile);
+setAdminStatus(`Importadas ${rows.length} fotos. Ya puedes mover y eliminar todas.`);
 });
 }
 
