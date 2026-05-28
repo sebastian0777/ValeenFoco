@@ -2775,11 +2775,16 @@ return fallback;
 
 function getPhotoItems(tile) {
 const title = tile.dataset.title || '';
-const remote = ((remoteByTitle && remoteByTitle[title]) || []);
-if (remote.length) {
-return remote.map((src) => ({ src, remote: true }));
-}
-return (fallbackByTitle[title] || []).map((src) => ({ src, remote: false }));
+const remote = ((remoteByTitle && remoteByTitle[title]) || []).map((src) => ({ src, remote: true }));
+const fallback = (fallbackByTitle[title] || []).map((src) => ({ src, remote: false }));
+const seen = new Set();
+const merged = [];
+[...remote, ...fallback].forEach((item) => {
+if (seen.has(item.src)) return;
+seen.add(item.src);
+merged.push(item);
+});
+return merged;
 }
 
 function renderPanel(tile) {
@@ -3332,12 +3337,18 @@ return;
 categoryTiles.forEach((item) => item.classList.remove('active'));
 tile.classList.add('active');
 
-await ensureCategoryEditable(tile.dataset.title || '');
 renderPanel(tile);
 if (!panel.classList.contains('open')) {
 panel.classList.add('open');
 }
 setTimeout(scrollToPanelStart, 40);
+
+try {
+await ensureCategoryEditable(tile.dataset.title || '');
+renderPanel(tile);
+} catch (error) {
+console.error(error);
+}
 });
 });
 
