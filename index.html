@@ -751,7 +751,7 @@ box-shadow:0 20px 32px rgba(0,0,0,0.2);
 
 .panel-item{
 position:relative;
-aspect-ratio:16 / 10;
+aspect-ratio:4 / 5;
 border-radius:14px;
 overflow:hidden;
 display:flex;
@@ -2688,27 +2688,41 @@ const remote = (remoteByTitle && remoteByTitle[category]) || [];
 const fallback = fallbackByTitle[category] || [];
 if (!fallback.length) return;
 const remoteSet = new Set(remote);
-const missing = fallback.filter((src) => !remoteSet.has(src));
-if (!missing.length) return;
+const remoteExtras = remote.filter((src) => !fallback.includes(src));
+const desiredOrder = [...fallback, ...remoteExtras];
 
-let sortBase = remote.length;
-const rows = missing.map((src) => {
-sortBase += 1;
-return {
+const missing = desiredOrder.filter((src) => !remoteSet.has(src));
+if (missing.length) {
+const rows = missing.map((src, idx) => ({
 category,
 public_url: src,
-sort_order: sortBase,
+sort_order: remote.length + idx + 1,
 is_active: true
-};
-});
-
-const { error } = await sb.from(SUPABASE_TABLE).insert(rows);
-if (error) {
-setAdminStatus(`No se pudo preparar la categoria ${category}: ${error.message}`, true);
+}));
+const insert = await sb.from(SUPABASE_TABLE).insert(rows);
+if (insert.error) {
+setAdminStatus(`No se pudo preparar la categoria ${category}: ${insert.error.message}`, true);
 return;
 }
 await refreshRemotePhotos();
-setAdminStatus(`Categoria ${category} lista para editar todo (${rows.length} importadas).`);
+}
+
+const meta = (remoteMetaByTitle && remoteMetaByTitle[category]) || [];
+const srcToId = new Map(meta.map((row) => [row.src, row.id]));
+const updates = desiredOrder
+  .map((src, idx) => ({ id: srcToId.get(src), sort_order: idx + 1 }))
+  .filter((row) => Boolean(row.id));
+
+if (updates.length) {
+const reorder = await sb.from(SUPABASE_TABLE).upsert(updates, { onConflict: 'id' });
+if (reorder.error) {
+setAdminStatus(`No se pudo ordenar ${category}: ${reorder.error.message}`, true);
+return;
+}
+await refreshRemotePhotos();
+}
+
+setAdminStatus(`Categoria ${category} lista para editar todo.`);
 }
 if (currentTile) renderPanel(currentTile);
 return true;
