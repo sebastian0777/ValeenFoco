@@ -724,6 +724,7 @@ display:block;
 .panel-grid{
 display:grid;
 grid-template-columns:repeat(3, minmax(0, 1fr));
+grid-auto-rows:clamp(250px, 26vw, 360px);
 gap:18px;
 overflow:visible;
 }
@@ -732,6 +733,7 @@ overflow:visible;
 width:100%;
 height:100%;
 object-fit:cover;
+object-position:center center;
 border-radius:14px;
 min-height:0;
 box-shadow:0 14px 24px rgba(0,0,0,0.14);
@@ -749,7 +751,7 @@ box-shadow:0 20px 32px rgba(0,0,0,0.2);
 
 .panel-item{
 position:relative;
-aspect-ratio:4 / 5;
+height:100%;
 border-radius:14px;
 overflow:hidden;
 display:flex;
@@ -1818,6 +1820,7 @@ font-size:30px;
 
 .panel-grid{
 grid-template-columns:repeat(2, minmax(0, 1fr));
+grid-auto-rows:clamp(230px, 38vw, 320px);
 overflow:visible;
 }
 
@@ -1958,6 +1961,7 @@ font-size:24px;
 
 .panel-grid{
 grid-template-columns:1fr;
+grid-auto-rows:clamp(260px, 75vw, 420px);
 gap:12px;
 overflow:visible;
 }
