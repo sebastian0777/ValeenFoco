@@ -757,6 +757,44 @@ position:relative;
 width:100%;
 }
 
+.panel-item.draggable{
+cursor:grab;
+}
+
+.panel-item.draggable::before{
+content:'↕';
+position:absolute;
+left:8px;
+top:8px;
+width:22px;
+height:22px;
+border-radius:8px;
+background:rgba(0,0,0,0.34);
+color:#fff;
+font-size:13px;
+display:grid;
+place-items:center;
+opacity:0;
+transform:translateY(-3px);
+transition:opacity 0.16s ease, transform 0.16s ease;
+z-index:3;
+}
+
+.panel-item.draggable:hover::before{
+opacity:1;
+transform:translateY(0);
+}
+
+.panel-item.dragging{
+opacity:0.45;
+transform:scale(0.985);
+}
+
+.panel-item.drag-over{
+outline:2px dashed rgba(122,87,87,0.5);
+outline-offset:3px;
+}
+
 .photo-delete{
 position:absolute;
 top:8px;
@@ -2378,7 +2416,7 @@ TikTok
 <option value="Producto">Producto</option>
 </select>
 <label for="adminFile">Foto</label>
-<input id="adminFile" type="file" accept="image/*">
+<input id="adminFile" type="file" accept="image/*" multiple>
 <div class="admin-actions">
 <button class="admin-btn primary" id="adminUpload" type="button">Subir foto</button>
 <button class="admin-btn" id="adminRefresh" type="button">Actualizar galeria</button>
@@ -2507,9 +2545,11 @@ let gestureStartY = 0;
 let gestureLastX = 0;
 let gestureLastY = 0;
 let remoteByTitle = null;
+let remoteMetaByTitle = null;
 let currentTile = null;
 let adminReady = false;
 let resolveConfirm = null;
+let draggingSrc = null;
 
 const fallbackByTitle = Object.fromEntries(categoryTiles.map((tile) => {
 const title = tile.dataset.title || '';
@@ -2574,24 +2614,34 @@ resolveConfirm = null;
 async function fetchRemotePhotos() {
 if (!sb) return null;
 const { data, error } = await sb.from(SUPABASE_TABLE)
-  .select('category, public_url, sort_order, is_active')
+  .select('id, category, public_url, sort_order, is_active')
   .eq('is_active', true)
   .order('sort_order', { ascending: true });
 if (error) throw error;
 const grouped = { Eventos: [], Retrato: [], Producto: [] };
+const groupedMeta = { Eventos: [], Retrato: [], Producto: [] };
 (data || []).forEach((row) => {
 if (!row.category || !row.public_url) return;
 if (!grouped[row.category]) grouped[row.category] = [];
 grouped[row.category].push(row.public_url);
+if (!groupedMeta[row.category]) groupedMeta[row.category] = [];
+groupedMeta[row.category].push({
+id: row.id,
+src: row.public_url,
+sort_order: row.sort_order
 });
-return grouped;
+});
+return { grouped, groupedMeta };
 }
 
 async function refreshRemotePhotos() {
 if (!sb) return false;
 try {
-const grouped = await fetchRemotePhotos();
-if (grouped) remoteByTitle = grouped;
+const payload = await fetchRemotePhotos();
+if (payload) {
+remoteByTitle = payload.grouped;
+remoteMetaByTitle = payload.groupedMeta;
+}
 if (currentTile) renderPanel(currentTile);
 return true;
 } catch (error) {
@@ -2681,10 +2731,30 @@ currentTile = tile;
 panelTitle.textContent = title;
 panelCount.textContent = `${String(photos.length).padStart(2, '0')} FOTOS`;
 panelGrid.innerHTML = photoItems.map((item, idx) => `
-<div class="panel-item">
+<div class="panel-item ${adminReady && item.remote ? 'draggable' : ''}" ${adminReady && item.remote ? `draggable="true" data-src="${item.src}"` : ''}>
 <img src="${item.src}" alt="${title} ${idx + 1}" style="--d:${idx * 35}ms;">
 ${adminReady && item.remote ? `<button class="photo-delete" type="button" data-delete-src="${item.src}" aria-label="Eliminar foto">🗑</button>` : ''}
 </div>`).join('');
+}
+
+async function persistRemoteOrderFromDom() {
+if (!sb || !currentTile) return;
+const title = currentTile.dataset.title || '';
+const domRemote = Array.from(panelGrid.querySelectorAll('.panel-item[data-src]')).map((node) => node.getAttribute('data-src'));
+const meta = (remoteMetaByTitle && remoteMetaByTitle[title]) || [];
+const srcToId = new Map(meta.map((item) => [item.src, item.id]));
+const updates = domRemote
+  .map((src, idx) => ({ id: srcToId.get(src), sort_order: idx + 1 }))
+  .filter((row) => Boolean(row.id));
+if (!updates.length) return;
+setAdminStatus('Guardando nuevo orden...');
+const { error } = await sb.from(SUPABASE_TABLE).upsert(updates, { onConflict: 'id' });
+if (error) {
+setAdminStatus(`No se pudo guardar orden: ${error.message}`, true);
+return;
+}
+await refreshRemotePhotos();
+setAdminStatus('Orden actualizado.');
 }
 
 function scrollToPanelStart() {
@@ -2780,6 +2850,47 @@ activeIndex = activePhotos.findIndex((src) => src === img.src);
 showPhotoByIndex(activeIndex < 0 ? 0 : activeIndex);
 lightbox.classList.add('open');
 lightbox.setAttribute('aria-hidden', 'false');
+});
+
+panelGrid.addEventListener('dragstart', (event) => {
+const item = event.target.closest('.panel-item.draggable');
+if (!item) return;
+draggingSrc = item.getAttribute('data-src');
+item.classList.add('dragging');
+if (event.dataTransfer) {
+event.dataTransfer.effectAllowed = 'move';
+event.dataTransfer.setData('text/plain', draggingSrc || '');
+}
+});
+
+panelGrid.addEventListener('dragend', (event) => {
+const item = event.target.closest('.panel-item.draggable');
+if (item) item.classList.remove('dragging');
+panelGrid.querySelectorAll('.panel-item.drag-over').forEach((node) => node.classList.remove('drag-over'));
+draggingSrc = null;
+});
+
+panelGrid.addEventListener('dragover', (event) => {
+const target = event.target.closest('.panel-item.draggable');
+if (!target) return;
+event.preventDefault();
+panelGrid.querySelectorAll('.panel-item.drag-over').forEach((node) => node.classList.remove('drag-over'));
+target.classList.add('drag-over');
+if (event.dataTransfer) event.dataTransfer.dropEffect = 'move';
+});
+
+panelGrid.addEventListener('drop', async (event) => {
+const target = event.target.closest('.panel-item.draggable');
+if (!target || !draggingSrc) return;
+event.preventDefault();
+target.classList.remove('drag-over');
+const dragged = Array.from(panelGrid.querySelectorAll('.panel-item.draggable')).find((node) => node.getAttribute('data-src') === draggingSrc);
+if (!dragged || dragged === target) return;
+const rect = target.getBoundingClientRect();
+const after = event.clientY > rect.top + (rect.height / 2);
+if (after) target.after(dragged);
+else target.before(dragged);
+await persistRemoteOrderFromDom();
 });
 
 lightboxClose.addEventListener('click', closeLightbox);
@@ -3020,45 +3131,48 @@ setAdminStatus('Inicia sesion con el email autorizado para subir fotos.', true);
 return;
 }
 const category = adminCategory.value;
-const file = adminFile.files && adminFile.files[0];
-if (!category || !file) {
-setAdminStatus('Selecciona categoria y foto.', true);
+const files = adminFile.files ? Array.from(adminFile.files) : [];
+if (!category || !files.length) {
+setAdminStatus('Selecciona categoria y al menos una foto.', true);
 return;
 }
 
-setAdminStatus('Subiendo foto...');
-const safeName = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
+setAdminStatus(`Subiendo ${files.length} foto(s)...`);
+const currentList = (remoteByTitle && remoteByTitle[category]) || [];
+let sortBase = currentList.length;
+const rows = [];
+for (const file of files) {
+const safeName = `${Date.now()}-${Math.random().toString(36).slice(2,7)}-${file.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
 const path = `${category.toLowerCase()}/${safeName}`;
 const upload = await sb.storage.from(SUPABASE_BUCKET).upload(path, file, {
 cacheControl: '3600',
 upsert: false
 });
 if (upload.error) {
-setAdminStatus(`Error al subir: ${upload.error.message}`, true);
+setAdminStatus(`Error al subir ${file.name}: ${upload.error.message}`, true);
 return;
 }
-
 const pub = sb.storage.from(SUPABASE_BUCKET).getPublicUrl(path);
 const publicUrl = pub?.data?.publicUrl;
 if (!publicUrl) {
-setAdminStatus('No se pudo obtener URL publica.', true);
+setAdminStatus(`No se pudo obtener URL publica para ${file.name}.`, true);
 return;
 }
-
-const currentList = (remoteByTitle && remoteByTitle[category]) || fallbackByTitle[category] || [];
-const sortOrder = currentList.length + 1;
-const insert = await sb.from(SUPABASE_TABLE).insert({
+sortBase += 1;
+rows.push({
 category,
 public_url: publicUrl,
-sort_order: sortOrder,
+sort_order: sortBase,
 is_active: true
 });
+}
+const insert = await sb.from(SUPABASE_TABLE).insert(rows);
 if (insert.error) {
 setAdminStatus(`Error al guardar en base: ${insert.error.message}`, true);
 return;
 }
 
-setAdminStatus('Foto subida correctamente.');
+setAdminStatus(`${files.length} foto(s) subida(s) correctamente.`);
 adminFile.value = '';
 await refreshRemotePhotos();
 });
