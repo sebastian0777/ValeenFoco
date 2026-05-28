@@ -676,9 +676,8 @@ transform:translate(-36%, -40%) rotate(14deg) scale(1.03);
 .archive-panel{
 max-width:min(96vw, 1480px);
 margin:26px auto 0;
-max-height:0;
 opacity:0;
-overflow:hidden;
+overflow:visible;
 padding:0 24px;
 background:transparent;
 border:0;
@@ -686,14 +685,15 @@ border-radius:0;
 box-shadow:none;
 transform-origin:top center;
 transform:scaleY(0.9) translateY(-14px);
-transition:max-height 0.45s ease, opacity 0.32s ease, padding 0.32s ease, transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+pointer-events:none;
+transition:opacity 0.32s ease, padding 0.32s ease, transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .archive-panel.open{
-max-height:5200px;
 opacity:1;
 padding:14px 4px 8px;
 transform:scaleY(1) translateY(0);
+pointer-events:auto;
 }
 
 .panel-head{
@@ -714,14 +714,11 @@ display:none;
 }
 
 .panel-reveal{
-display:block;
-max-height:0;
-overflow:hidden;
-transition:max-height 0.45s ease;
+display:none;
 }
 
 .archive-panel.open .panel-reveal{
-max-height:20000px;
+display:block;
 }
 
 .panel-grid{
@@ -733,7 +730,7 @@ overflow:visible;
 
 .panel-grid img{
 width:100%;
-height:auto;
+height:100%;
 object-fit:contain;
 border-radius:14px;
 min-height:0;
@@ -752,6 +749,13 @@ box-shadow:0 20px 32px rgba(0,0,0,0.2);
 
 .panel-item{
 position:relative;
+aspect-ratio:4 / 5;
+border-radius:14px;
+overflow:hidden;
+background:#0d0d0f;
+display:flex;
+align-items:center;
+justify-content:center;
 }
 
 .panel-item img{
@@ -1770,7 +1774,6 @@ font-size:30px;
 }
 
 .archive-panel.open{
-max-height:20000px;
 overflow:visible;
 }
 
@@ -1784,14 +1787,11 @@ overflow:visible;
 }
 
 .panel-reveal{
-display:block;
-max-height:0;
-overflow:hidden;
-transition:max-height 0.45s ease;
+display:none;
 }
 
 .archive-panel.open .panel-reveal{
-max-height:20000px;
+display:block;
 }
 
 .panel-grid img{
@@ -1910,7 +1910,6 @@ padding:0 12px;
 
 .archive-panel.open{
 padding:10px 0 8px;
-max-height:20000px;
 overflow:visible;
 }
 
@@ -1929,14 +1928,11 @@ overflow:visible;
 }
 
 .panel-reveal{
-display:block;
-max-height:0;
-overflow:hidden;
-transition:max-height 0.45s ease;
+display:none;
 }
 
 .archive-panel.open .panel-reveal{
-max-height:20000px;
+display:block;
 }
 
 .panel-grid img{
