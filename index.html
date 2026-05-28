@@ -2809,15 +2809,16 @@ currentTile = tile;
 panelTitle.textContent = title;
 panelCount.textContent = `${String(photos.length).padStart(2, '0')} FOTOS`;
 panelGrid.innerHTML = photoItems.map((item, idx) => `
-<div class="panel-item ${adminReady && item.remote ? 'draggable' : ''}" ${adminReady && item.remote ? `data-src="${item.src}"` : ''}>
+<div class="panel-item ${adminReady ? 'draggable' : ''}" ${adminReady ? `data-src="${item.src}"` : ''}>
 <img src="${item.src}" alt="${title} ${idx + 1}" style="--d:${idx * 35}ms;">
-${adminReady && item.remote ? `<button class="photo-delete" type="button" data-delete-src="${item.src}" aria-label="Eliminar foto">🗑</button>` : ''}
+${adminReady ? `<button class="photo-delete" type="button" data-delete-src="${item.src}" aria-label="Eliminar foto">🗑</button>` : ''}
 </div>`).join('');
 }
 
 async function persistRemoteOrderFromDom() {
 if (!sb || !currentTile) return;
 const title = currentTile.dataset.title || '';
+await ensureCategoryEditable(title);
 const domRemote = Array.from(panelGrid.querySelectorAll('.panel-item[data-src]')).map((node) => node.getAttribute('data-src'));
 const meta = (remoteMetaByTitle && remoteMetaByTitle[title]) || [];
 const srcToId = new Map(meta.map((item) => [item.src, item.id]));
@@ -2903,6 +2904,7 @@ if (!src) return;
 const ok = await askConfirmDelete();
 if (!ok) return;
 try {
+await ensureCategoryEditable(currentTile?.dataset?.title || '');
 setAdminStatus('Eliminando foto...');
 const { error: delRowError } = await sb.from(SUPABASE_TABLE).delete().eq('public_url', src);
 if (delRowError) throw delRowError;
