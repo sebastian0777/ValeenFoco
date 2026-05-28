@@ -731,7 +731,7 @@ overflow:visible;
 .panel-grid img{
 width:100%;
 height:100%;
-object-fit:contain;
+object-fit:cover;
 border-radius:14px;
 min-height:0;
 box-shadow:0 14px 24px rgba(0,0,0,0.14);
@@ -752,7 +752,6 @@ position:relative;
 aspect-ratio:4 / 5;
 border-radius:14px;
 overflow:hidden;
-background:#0d0d0f;
 display:flex;
 align-items:center;
 justify-content:center;
@@ -798,6 +797,32 @@ transform:scale(0.985);
 .panel-item.drag-over{
 outline:2px dashed rgba(122,87,87,0.5);
 outline-offset:3px;
+}
+
+.panel-item.picked{
+z-index:6;
+animation:dragPop 0.28s ease forwards, dragWiggle 1.2s ease-in-out infinite;
+box-shadow:0 18px 30px rgba(0,0,0,0.22);
+}
+
+.drag-ghost{
+position:fixed;
+z-index:5000;
+pointer-events:none;
+width:180px;
+aspect-ratio:4 / 5;
+border-radius:14px;
+overflow:hidden;
+box-shadow:0 24px 36px rgba(0,0,0,0.28);
+transform:translate(-50%, -50%) rotate(2deg);
+opacity:0.95;
+}
+
+.drag-ghost img{
+width:100%;
+height:100%;
+object-fit:cover;
+display:block;
 }
 
 .photo-delete{
@@ -1420,6 +1445,16 @@ box-shadow:0 8px 18px rgba(35,27,27,0.08);
 @keyframes meShimmer{
 0%,70%{left:-130%}
 100%{left:150%}
+}
+
+@keyframes dragPop{
+0%{transform:scale(1) rotate(0deg)}
+100%{transform:scale(1.04) rotate(-1.5deg)}
+}
+
+@keyframes dragWiggle{
+0%,100%{transform:scale(1.04) rotate(-1.2deg)}
+50%{transform:scale(1.05) rotate(1.4deg)}
 }
 
 .confirm-modal{
@@ -2547,6 +2582,9 @@ let currentTile = null;
 let adminReady = false;
 let resolveConfirm = null;
 let draggingSrc = null;
+let dragNode = null;
+let dragGhost = null;
+let dragPointerId = null;
 
 const fallbackByTitle = Object.fromEntries(categoryTiles.map((tile) => {
 const title = tile.dataset.title || '';
@@ -2728,7 +2766,7 @@ currentTile = tile;
 panelTitle.textContent = title;
 panelCount.textContent = `${String(photos.length).padStart(2, '0')} FOTOS`;
 panelGrid.innerHTML = photoItems.map((item, idx) => `
-<div class="panel-item ${adminReady && item.remote ? 'draggable' : ''}" ${adminReady && item.remote ? `draggable="true" data-src="${item.src}"` : ''}>
+<div class="panel-item ${adminReady && item.remote ? 'draggable' : ''}" ${adminReady && item.remote ? `data-src="${item.src}"` : ''}>
 <img src="${item.src}" alt="${title} ${idx + 1}" style="--d:${idx * 35}ms;">
 ${adminReady && item.remote ? `<button class="photo-delete" type="button" data-delete-src="${item.src}" aria-label="Eliminar foto">🗑</button>` : ''}
 </div>`).join('');
@@ -2849,45 +2887,80 @@ lightbox.classList.add('open');
 lightbox.setAttribute('aria-hidden', 'false');
 });
 
-panelGrid.addEventListener('dragstart', (event) => {
+function clearDragState() {
+panelGrid.querySelectorAll('.panel-item.drag-over').forEach((node) => node.classList.remove('drag-over'));
+if (dragNode) {
+dragNode.classList.remove('picked');
+dragNode.classList.remove('dragging');
+}
+if (dragGhost) {
+dragGhost.remove();
+dragGhost = null;
+}
+dragNode = null;
+draggingSrc = null;
+dragPointerId = null;
+}
+
+function startCustomDrag(item, clientX, clientY, pointerId = null) {
+dragNode = item;
+draggingSrc = item.getAttribute('data-src');
+dragPointerId = pointerId;
+item.classList.add('picked');
+item.classList.add('dragging');
+const img = item.querySelector('img');
+dragGhost = document.createElement('div');
+dragGhost.className = 'drag-ghost';
+dragGhost.innerHTML = `<img src="${img ? img.src : ''}" alt="">`;
+document.body.appendChild(dragGhost);
+moveCustomDrag(clientX, clientY);
+}
+
+function moveCustomDrag(clientX, clientY) {
+if (!dragNode || !dragGhost) return;
+dragGhost.style.left = `${clientX}px`;
+dragGhost.style.top = `${clientY}px`;
+const el = document.elementFromPoint(clientX, clientY);
+const target = el && el.closest ? el.closest('.panel-item.draggable') : null;
+panelGrid.querySelectorAll('.panel-item.drag-over').forEach((node) => node.classList.remove('drag-over'));
+if (!target || target === dragNode) return;
+target.classList.add('drag-over');
+const rect = target.getBoundingClientRect();
+const after = clientY > rect.top + (rect.height / 2);
+if (after) target.after(dragNode);
+else target.before(dragNode);
+}
+
+async function endCustomDrag() {
+if (!dragNode) return;
+clearDragState();
+await persistRemoteOrderFromDom();
+}
+
+panelGrid.addEventListener('pointerdown', (event) => {
 const item = event.target.closest('.panel-item.draggable');
 if (!item) return;
-draggingSrc = item.getAttribute('data-src');
-item.classList.add('dragging');
-if (event.dataTransfer) {
-event.dataTransfer.effectAllowed = 'move';
-event.dataTransfer.setData('text/plain', draggingSrc || '');
-}
-});
-
-panelGrid.addEventListener('dragend', (event) => {
-const item = event.target.closest('.panel-item.draggable');
-if (item) item.classList.remove('dragging');
-panelGrid.querySelectorAll('.panel-item.drag-over').forEach((node) => node.classList.remove('drag-over'));
-draggingSrc = null;
-});
-
-panelGrid.addEventListener('dragover', (event) => {
-const target = event.target.closest('.panel-item.draggable');
-if (!target) return;
+if (event.target.closest('.photo-delete')) return;
 event.preventDefault();
-panelGrid.querySelectorAll('.panel-item.drag-over').forEach((node) => node.classList.remove('drag-over'));
-target.classList.add('drag-over');
-if (event.dataTransfer) event.dataTransfer.dropEffect = 'move';
+startCustomDrag(item, event.clientX, event.clientY, event.pointerId);
 });
 
-panelGrid.addEventListener('drop', async (event) => {
-const target = event.target.closest('.panel-item.draggable');
-if (!target || !draggingSrc) return;
+window.addEventListener('pointermove', (event) => {
+if (!dragNode) return;
+if (dragPointerId !== null && event.pointerId !== dragPointerId) return;
 event.preventDefault();
-target.classList.remove('drag-over');
-const dragged = Array.from(panelGrid.querySelectorAll('.panel-item.draggable')).find((node) => node.getAttribute('data-src') === draggingSrc);
-if (!dragged || dragged === target) return;
-const rect = target.getBoundingClientRect();
-const after = event.clientY > rect.top + (rect.height / 2);
-if (after) target.after(dragged);
-else target.before(dragged);
-await persistRemoteOrderFromDom();
+moveCustomDrag(event.clientX, event.clientY);
+}, { passive: false });
+
+window.addEventListener('pointerup', async (event) => {
+if (!dragNode) return;
+if (dragPointerId !== null && event.pointerId !== dragPointerId) return;
+await endCustomDrag();
+});
+
+window.addEventListener('pointercancel', () => {
+if (!dragNode) return;
+clearDragState();
 });
 
 lightboxClose.addEventListener('click', closeLightbox);
