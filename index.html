@@ -714,26 +714,27 @@ display:none;
 }
 
 .panel-reveal{
-display:grid;
-grid-template-rows:0fr;
-transition:grid-template-rows 0.35s ease;
+display:block;
+max-height:0;
+overflow:hidden;
+transition:max-height 0.45s ease;
 }
 
 .archive-panel.open .panel-reveal{
-grid-template-rows:1fr;
+max-height:20000px;
 }
 
 .panel-grid{
 display:grid;
 grid-template-columns:repeat(3, minmax(0, 1fr));
 gap:18px;
-overflow:hidden;
+overflow:visible;
 }
 
 .panel-grid img{
 width:100%;
-aspect-ratio:4 / 5;
-object-fit:cover;
+height:auto;
+object-fit:contain;
 border-radius:14px;
 min-height:0;
 box-shadow:0 14px 24px rgba(0,0,0,0.14);
@@ -1794,7 +1795,7 @@ max-height:20000px;
 }
 
 .panel-grid img{
-min-height:340px;
+min-height:0;
 }
 
 .tiktok-phone{
@@ -1939,7 +1940,7 @@ max-height:20000px;
 }
 
 .panel-grid img{
-min-height:320px;
+min-height:0;
 }
 
 .tiktok-phone{
