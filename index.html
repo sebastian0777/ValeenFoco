@@ -2681,6 +2681,35 @@ if (payload) {
 remoteByTitle = payload.grouped;
 remoteMetaByTitle = payload.groupedMeta;
 }
+
+async function ensureCategoryEditable(category) {
+if (!sb || !adminReady || !category) return;
+const remote = (remoteByTitle && remoteByTitle[category]) || [];
+const fallback = fallbackByTitle[category] || [];
+if (!fallback.length) return;
+const remoteSet = new Set(remote);
+const missing = fallback.filter((src) => !remoteSet.has(src));
+if (!missing.length) return;
+
+let sortBase = remote.length;
+const rows = missing.map((src) => {
+sortBase += 1;
+return {
+category,
+public_url: src,
+sort_order: sortBase,
+is_active: true
+};
+});
+
+const { error } = await sb.from(SUPABASE_TABLE).insert(rows);
+if (error) {
+setAdminStatus(`No se pudo preparar la categoria ${category}: ${error.message}`, true);
+return;
+}
+await refreshRemotePhotos();
+setAdminStatus(`Categoria ${category} lista para editar todo (${rows.length} importadas).`);
+}
 if (currentTile) renderPanel(currentTile);
 return true;
 } catch (error) {
@@ -3292,7 +3321,7 @@ await refreshRemotePhotos();
 }
 
 categoryTiles.forEach((tile) => {
-tile.addEventListener('click', () => {
+tile.addEventListener('click', async () => {
 const isActive = tile.classList.contains('active');
 if (isActive && panel.classList.contains('open')) {
 panel.classList.remove('open');
@@ -3303,6 +3332,7 @@ return;
 categoryTiles.forEach((item) => item.classList.remove('active'));
 tile.classList.add('active');
 
+await ensureCategoryEditable(tile.dataset.title || '');
 renderPanel(tile);
 if (!panel.classList.contains('open')) {
 panel.classList.add('open');
