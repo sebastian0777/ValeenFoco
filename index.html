@@ -2792,15 +2792,28 @@ if (remote && remote.length) return remote;
 return fallback;
 }
 
+function photoKey(src) {
+if (!src) return '';
+const clean = src.split('?')[0].split('#')[0];
+const parts = clean.split('/');
+const file = parts[parts.length - 1] || clean;
+try {
+return decodeURIComponent(file).toLowerCase();
+} catch (_) {
+return file.toLowerCase();
+}
+}
+
 function getPhotoItems(tile) {
 const title = tile.dataset.title || '';
 const remote = ((remoteByTitle && remoteByTitle[title]) || []).map((src) => ({ src, remote: true }));
 const fallback = (fallbackByTitle[title] || []).map((src) => ({ src, remote: false }));
 const seen = new Set();
 const merged = [];
-[...remote, ...fallback].forEach((item) => {
-if (seen.has(item.src)) return;
-seen.add(item.src);
+[...fallback, ...remote].forEach((item) => {
+const key = photoKey(item.src);
+if (seen.has(key)) return;
+seen.add(key);
 merged.push(item);
 });
 return merged;
