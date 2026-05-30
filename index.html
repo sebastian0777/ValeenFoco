@@ -2527,6 +2527,7 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const SUPABASE_BUCKET = 'portfolio';
 const SUPABASE_TABLE = 'photos';
 const ALLOWED_ADMIN_EMAIL = 'valeenfoco@gmail.com';
+const isAdminMode = window.location.search.includes('admin=1');
 const isSupabaseReady = Boolean(SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase);
 const sb = isSupabaseReady ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 const categoryTiles = Array.from(document.querySelectorAll('.category-tile'));
@@ -2604,16 +2605,20 @@ adminStatus.style.color = error ? '#b42318' : '#2e2e2e';
 }
 
 function setAdminReady(ready) {
-adminReady = ready;
+adminReady = Boolean(ready && isAdminMode);
 if (!adminUploadBlock) return;
-adminUploadBlock.classList.toggle('locked', !ready);
-adminUploadBlock.classList.toggle('hidden', !ready);
+adminUploadBlock.classList.toggle('locked', !adminReady);
+adminUploadBlock.classList.toggle('hidden', !adminReady);
 if (currentTile && panel.classList.contains('open')) {
 renderPanel(currentTile);
 }
 }
 
 function playWelcomeThenEnable() {
+if (!isAdminMode) {
+setAdminReady(false);
+return;
+}
 if (!adminWelcome) {
 if (adminLoginBlock) adminLoginBlock.classList.add('hidden');
 setAdminReady(true);
@@ -3154,7 +3159,7 @@ if (lightbox.classList.contains('open')) updateTransform();
 });
 
 if (adminLaunch && adminPanel && adminClose) {
-const showAdminButton = window.location.search.includes('admin=1');
+const showAdminButton = isAdminMode;
 if (showAdminButton) adminLaunch.style.display = 'inline-flex';
 
 adminLaunch.addEventListener('click', () => {
@@ -3177,7 +3182,7 @@ refreshRemotePhotos();
 setAdminReady(false);
 sb.auth.getSession().then(({ data }) => {
 const userEmail = (data?.session?.user?.email || '').toLowerCase();
-if (userEmail === ALLOWED_ADMIN_EMAIL) {
+if (isAdminMode && userEmail === ALLOWED_ADMIN_EMAIL) {
 playWelcomeThenEnable();
 }
 });
